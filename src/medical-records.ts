@@ -1,4 +1,4 @@
-const medicalRecord = [{
+export const medicalRecord = [{
     "patientId": "P12345",
     "personalInfo": {
         "name": "Devansh Prajapati",
@@ -120,3 +120,4 @@ const medicalRecord = [{
     ]
 }
 ]
+

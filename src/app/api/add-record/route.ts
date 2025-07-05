@@ -1,0 +1,1 @@
+import { medicalRecord } from "@/medical-records"
