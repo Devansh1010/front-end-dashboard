@@ -102,7 +102,7 @@ export default function MedicalDashboard() {
     const [viewMode, setViewMode] = useState<"dashboard" | "reports">("dashboard")
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col">
+        <div className="min-h-screen bg-gray-50 flex flex-col min-w-full">
             {/* Header */}
             <div className="bg-blue-600 text-white p-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -115,7 +115,7 @@ export default function MedicalDashboard() {
             </div>
 
             {/* Main Layout */}
-            <div className="flex flex-1 max-w-7xl mx-auto w-full">
+            <div className="flex flex-1 max-w-full mx-auto w-full">
                 {/* Left Sidebar */}
                 <div className="w-48 bg-white border-r p-4 flex-shrink-0">
                     <div className="space-y-4">
@@ -171,21 +171,23 @@ export default function MedicalDashboard() {
                 </div>
 
                 {/* Right Sidebar */}
-                <div className="w-64 bg-white border-l p-6 space-y-4 flex-shrink-0">
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Add Reports</Button>
+                <div className="w-64 bg-white border-l p-4 flex-shrink-0 flex flex-col justify-between">
+                    <div className="p-4 space-y-4">
+                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Add Reports</Button>
 
-                    <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black">Create Folder</Button>
+                        <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black">Create Folder</Button>
 
-                    <Button className="w-full bg-yellow-300 hover:bg-yellow-400 text-black">All Reports</Button>
+                        <Button className="w-full bg-yellow-300 hover:bg-yellow-400 text-black">All Reports</Button>
 
-                    <div className="pt-4 border-t">
-                        <p className="text-sm text-gray-600 mb-2">52 GB of 100 GB Left</p>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div className="bg-blue-600 h-2 rounded-full" style={{ width: "48%" }}></div>
+                        <div className="pt-4 border-t">
+                            <p className="text-sm text-gray-600 mb-2">52 GB of 100 GB Left</p>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div className="bg-blue-600 h-2 rounded-full" style={{ width: "48%" }}></div>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="pt-4">
+                    <div className="">
                         <p className="text-sm text-gray-600 mb-2">Need Storage?</p>
                         <Button variant="outline" size="sm" className="w-full bg-transparent">
                             Contact Us
@@ -194,15 +196,6 @@ export default function MedicalDashboard() {
                 </div>
             </div>
 
-            {/* Toggle View Button */}
-            <div className="fixed bottom-6 right-6">
-                <Button
-                    onClick={() => setViewMode(viewMode === "dashboard" ? "reports" : "dashboard")}
-                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 py-3"
-                >
-                    {viewMode === "dashboard" ? "View Reports" : "View Dashboard"}
-                </Button>
-            </div>
         </div>
     )
 
