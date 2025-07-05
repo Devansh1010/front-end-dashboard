@@ -117,7 +117,7 @@ export default function MedicalDashboard() {
             {/* Main Layout */}
             <div className="flex flex-1 max-w-full mx-auto w-full">
                 {/* Left Sidebar */}
-                <div className="w-48 bg-white border-r p-4 flex-shrink-0">
+                <div className="w-50 bg-white border-r p-4 flex-shrink-0 drop-shadow-2xl">
                     <div className="space-y-4">
                         <div className="text-center">
                             <p className="text-sm font-medium text-gray-600 mb-4">Palak</p>
@@ -171,7 +171,7 @@ export default function MedicalDashboard() {
                 </div>
 
                 {/* Right Sidebar */}
-                <div className="w-64 bg-white border-l p-4 flex-shrink-0 flex flex-col justify-between">
+                <div className="w-55 bg-white border-l p-4 flex-shrink-0 flex flex-col justify-between drop-shadow-2xl">
                     <div className="p-4 space-y-4">
                         <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Add Reports</Button>
 
