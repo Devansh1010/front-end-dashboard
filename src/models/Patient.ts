@@ -3,7 +3,6 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface MedicalRecord {
     personalInfo: PersonalInfo;
     socialHistory: SocialHistory;
-    classicalHealthQuestions: ClassicalHealthQuestion[];
     medicalPrescription: MedicalPrescription[];
     knownAllergies: KnownAllergies;
     medicalHistory: MedicalHistoryEntry[];
@@ -29,11 +28,6 @@ export interface SocialHistory {
     drugUse: string;
     exerciseFrequency: string;
     dietType: string;
-}
-
-export interface ClassicalHealthQuestion {
-    question: string;
-    answer: string;
 }
 
 export interface MedicalPrescription {
@@ -122,12 +116,6 @@ const patientSchema: Schema<MedicalRecord> = new Schema({
         dietType: { type: String, required: true }
     },
 
-    classicalHealthQuestions: [
-        {
-            question: { type: String, required: true },
-            answer: { type: String, required: true }
-        }
-    ],
 
     medicalPrescription: [
         {

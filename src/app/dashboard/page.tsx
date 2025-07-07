@@ -18,6 +18,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { redirect } from "next/dist/server/api-utils"
+import Link from "next/link"
 
 const familyMembers = [
     { name: "Ankit", avatar: "/placeholder.svg?height=40&width=40", active: false },
@@ -173,7 +175,10 @@ export default function MedicalDashboard() {
                 {/* Right Sidebar */}
                 <div className="w-55 bg-white border-l p-4 flex-shrink-0 flex flex-col justify-between drop-shadow-2xl">
                     <div className="p-4 space-y-4">
-                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Add Reports</Button>
+                        <Link href='/add-data-form'>
+                            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Add Reports</Button>
+                        </Link>
+
 
                         <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black">Create Folder</Button>
 

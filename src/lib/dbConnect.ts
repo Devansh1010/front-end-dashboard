@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 //New Version:- 
 
- const MONGODB_URI =process.env.MONGO_URI || "";
+ const MONGODB_URI ="mongodb+srv://vivekpraj2912:RxAqHe76s8lIUZWa@hfiles.l7gzc0q.mongodb.net/";
 
  if(!MONGODB_URI) {
     throw new Error("Please define mongodb uri on the env file.")
