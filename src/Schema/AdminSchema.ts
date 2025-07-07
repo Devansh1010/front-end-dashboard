@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const signUpSchema = z.object({
+export const adminSchema = z.object({
     userName: z
 .string()
 .min(2, "userName must be atleast 2 character")
