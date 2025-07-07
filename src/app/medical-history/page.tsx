@@ -1,470 +1,114 @@
-"use client"
-
-import { useState } from "react"
-import { useForm, Controller } from "react-hook-form"
-import { ChevronDownIcon, ChevronUpIcon, UserIcon, ShareIcon, PlusIcon } from "lucide-react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Input } from "@/components/ui/input"
 
-interface FormData {
-  socialHistory: {
-    smoke: string
-    alcohol: string
-    vegetarian: string
-    exercise: string
-  }
-  allergies: {
-    [key: string]: string
-  }
-  medicalHistory: {
-    [key: string]: {
-      myself: boolean
-      motherSide: boolean
-      fatherSide: boolean
-    }
-  }
-}
-
-export default function MedicalHistoryPage() {
-  const [allergiesOpen, setAllergiesOpen] = useState(false)
-  const [medicalHistoryOpen, setMedicalHistoryOpen] = useState(false)
-
-  const { control, handleSubmit, watch } = useForm<FormData>({
-    defaultValues: {
-      socialHistory: {
-        smoke: "",
-        alcohol: "",
-        vegetarian: "",
-        exercise: "",
-      },
-      allergies: {},
-      medicalHistory: {},
-    },
-  })
-
-  const onSubmit = (data: FormData) => {
-    console.log("Form submitted:", data)
-  }
-
-  const allergyTypes = ["Barley", "Barley", "Barley", "Barley", "Barley"]
-  const medicalConditions = ["Barley", "Barley", "Barley", "Barley", "Barley"]
-
+export default function MedicalHistory() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="max-w-7xl mx-auto px-4 pt-5">
+
       {/* Header */}
-      <div className="bg-blue-600 text-white p-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="text-white hover:bg-blue-700">
-              ← Back
-            </Button>
-            <h1 className="text-lg font-medium">hfiles</h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src="/placeholder.svg?height=32&width=32" />
-              <AvatarFallback className="bg-white text-blue-600">
-                <UserIcon className="h-4 w-4" />
-              </AvatarFallback>
-            </Avatar>
-          </div>
-        </div>
+      <div className="mb-4 text-center">
+        <Link href="/api/dashboard">
+          <Button variant="link" className="absolute left-4 top-5 p-0 h-6 text-lg">Back</Button>
+        </Link>
+
+        <h2 className="text-xl font-bold font-serif mt-2">
+          Your Complete Medical History, always at your fingertips with <span className="text-blue-800">HFiles</span>
+        </h2>
+        <hr className="w-24 h-[2px] mx-auto bg-black border-0 rounded my-2" />
+
+        <Button variant="outline" className="w-24 h-8 mt-2">Share</Button>
       </div>
 
-      {/* Subheader */}
-      <div className="bg-white border-b">
-        <div className="max-w-4xl mx-auto p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 mb-1">
-                Your complete medical history, always at your fingertips with hfiles
-              </p>
-              <Button variant="outline" size="sm" className="text-gray-600 bg-transparent">
-                <ShareIcon className="h-4 w-4 mr-1" />
-                Share
-              </Button>
-            </div>
-            <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16">
-                <AvatarImage src="/placeholder.svg?height=64&width=64" />
-                <AvatarFallback className="bg-gray-200">
-                  <UserIcon className="h-8 w-8 text-gray-400" />
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <h2 className="font-semibold">Ankit K.</h2>
-                <ChevronDownIcon className="h-4 w-4 text-gray-400" />
+      {/* Main Card */}
+      <div className="flex justify-center">
+        <Card className="w-full shadow-lg max-w-6xl">
+          <CardContent className="flex flex-col lg:flex-row gap-6 p-0">
+
+            {/* LEFT SIDE: PROFILE (40%) */}
+            <div className="w-full lg:w-2/5 bg-blue-50 py-8 px-6 flex flex-col items-center justify-start space-y-6">
+              {/* Avatar + Name */}
+              <div className="flex flex-col items-center">
+                <Avatar className="w-40 h-40">
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback className="text-3xl">AN</AvatarFallback>
+                </Avatar>
+                <p className="text-2xl font-bold mt-4">Ankit</p>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div className="max-w-4xl mx-auto p-4 space-y-6">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Social History */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-blue-600">Social History</CardTitle>
-              <p className="text-sm text-gray-600">Track your Social History to help with better health</p>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-sm font-medium">Do You Smoke?</Label>
-                    <Controller
-                      name="socialHistory.smoke"
-                      control={control}
-                      render={({ field }) => (
-                        <RadioGroup value={field.value} onValueChange={field.onChange} className="flex gap-4">
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="yes" id="smoke-yes" />
-                            <Label htmlFor="smoke-yes" className="text-sm">
-                              Yes
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="no" id="smoke-no" />
-                            <Label htmlFor="smoke-no" className="text-sm">
-                              No
-                            </Label>
-                          </div>
-                        </RadioGroup>
-                      )}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <Label className="text-sm font-medium">Do You Consume Alcohol?</Label>
-                    <Controller
-                      name="socialHistory.alcohol"
-                      control={control}
-                      render={({ field }) => (
-                        <RadioGroup value={field.value} onValueChange={field.onChange} className="flex gap-4">
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                              value="yes"
-                              id="alcohol-yes"
-                              className="border-orange-400 text-orange-400"
-                            />
-                            <Label htmlFor="alcohol-yes" className="text-sm">
-                              Yes
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="no" id="alcohol-no" />
-                            <Label htmlFor="alcohol-no" className="text-sm">
-                              No
-                            </Label>
-                          </div>
-                        </RadioGroup>
-                      )}
-                    />
-                  </div>
+              {/* Profile Info with Inputs */}
+              <div className="w-full max-w-md grid grid-cols-2 gap-6">
+                {/* Labels */}
+                <div className="text-right space-y-4 pr-4">
+                  <p><strong>Age:</strong></p>
+                  <p><strong>Gender:</strong></p>
+                  <p><strong>Blood Group:</strong></p>
+                  <p><strong>Weight:</strong></p>
+                  <p><strong>Height:</strong></p>
+                  <p><strong>BMI:</strong></p>
                 </div>
 
+                {/* Inputs */}
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-sm font-medium">Are You Vegetarian?</Label>
-                    <Controller
-                      name="socialHistory.vegetarian"
-                      control={control}
-                      render={({ field }) => (
-                        <RadioGroup value={field.value} onValueChange={field.onChange} className="flex gap-4">
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="yes" id="veg-yes" className="border-orange-400 text-orange-400" />
-                            <Label htmlFor="veg-yes" className="text-sm">
-                              Yes
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="no" id="veg-no" />
-                            <Label htmlFor="veg-no" className="text-sm">
-                              No
-                            </Label>
-                          </div>
-                        </RadioGroup>
-                      )}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <Label className="text-sm font-medium">Do You Exercise Regularly?</Label>
-                    <Controller
-                      name="socialHistory.exercise"
-                      control={control}
-                      render={({ field }) => (
-                        <RadioGroup value={field.value} onValueChange={field.onChange} className="flex gap-4">
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                              value="yes"
-                              id="exercise-yes"
-                              className="border-orange-400 text-orange-400"
-                            />
-                            <Label htmlFor="exercise-yes" className="text-sm">
-                              Yes
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="no" id="exercise-no" />
-                            <Label htmlFor="exercise-no" className="text-sm">
-                              No
-                            </Label>
-                          </div>
-                        </RadioGroup>
-                      )}
-                    />
-                  </div>
+                  <Input type="number" placeholder="28" />
+                  <Input type="text" placeholder="Male" />
+                  <Input type="text" placeholder="B+" />
+                  <Input type="number" placeholder="70" />
+                  <Input type="text" placeholder="5'8&quot;" />
+                  <Input type="text" placeholder="23.2" />
                 </div>
               </div>
+            </div>
 
-              <div className="flex justify-end">
-                <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-                  Save
-                </Button>
+            {/* RIGHT SIDE: SOCIAL HISTORY (60%) */}
+            <div className="w-full lg:w-3/5 py-8 px-6 flex flex-col justify-start">
+              <h3 className="text-2xl font-semibold text-center mb-6">🩺 Social History</h3>
+
+              {/* Answer Header */}
+              <div className="grid grid-cols-4 font-medium text-sm text-gray-600 mb-4 px-2">
+                <div className="col-span-1"></div>
+                <div className="text-center">Yes</div>
+                <div className="text-center">No</div>
+                <div className="text-center">Occasionally</div>
               </div>
-            </CardContent>
-          </Card>
 
-          {/* View Medical Prescription */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-blue-600">View Medical Prescription</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600 mb-4">Easily access your family's prescriptions whenever you need.</p>
-              <Button variant="outline" className="bg-yellow-100 border-yellow-300 text-yellow-800 hover:bg-yellow-200">
-                Medical prescriptions
-              </Button>
-            </CardContent>
-          </Card>
+              {/* Questions List */}
+              <div className="space-y-6">
+                {[
+                  { id: "smoke", label: "Do you smoke?" },
+                  { id: "alcohol", label: "Do you consume alcohol?" },
+                  { id: "exercise", label: "Do you exercise regularly?" },
+                  { id: "diet", label: "Do you follow a specific diet?" }
+                ].map((question) => (
+                  <div key={question.id} className="mb-4">
+                    <Label className="block text-md font-medium mb-1">{question.label}</Label>
+                    <RadioGroup defaultValue="no" className="flex gap-6">
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="yes" id={`${question.id}-yes`} />
+                        <Label htmlFor={`${question.id}-yes`}>Yes</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="no" id={`${question.id}-no`} />
+                        <Label htmlFor={`${question.id}-no`}>No</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="occasionally" id={`${question.id}-occasionally`} />
+                        <Label htmlFor={`${question.id}-occasionally`}>Occasionally</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                ))}
+              </div>
 
-          {/* Update your Allergies */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-blue-600">Update your Allergies</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Collapsible open={allergiesOpen} onOpenChange={setAllergiesOpen}>
-                <CollapsibleTrigger className="flex items-center justify-between w-full p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
-                  <span className="text-sm text-gray-600">
-                    Know your allergies and take control. Add them here for safer healthcare living!
-                  </span>
-                  {allergiesOpen ? (
-                    <ChevronUpIcon className="h-4 w-4 text-gray-400" />
-                  ) : (
-                    <ChevronDownIcon className="h-4 w-4 text-gray-400" />
-                  )}
-                </CollapsibleTrigger>
-                <CollapsibleContent className="mt-4">
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b">
-                          <th className="text-left py-2 px-4 text-sm font-medium text-gray-600">Type</th>
-                          <th className="text-center py-2 px-4 text-sm font-medium text-gray-600">Yes</th>
-                          <th className="text-center py-2 px-4 text-sm font-medium text-gray-600">No</th>
-                          <th className="text-left py-2 px-4 text-sm font-medium text-gray-600">Type</th>
-                          <th className="text-center py-2 px-4 text-sm font-medium text-gray-600">Yes</th>
-                          <th className="text-center py-2 px-4 text-sm font-medium text-gray-600">No</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {Array.from({ length: Math.ceil(allergyTypes.length / 2) }).map((_, rowIndex) => (
-                          <tr key={rowIndex} className="border-b">
-                            {/* First column group */}
-                            <td className="py-3 px-4 text-sm">{allergyTypes[rowIndex * 2]}</td>
-                            <td className="text-center py-3 px-4">
-                              <Controller
-                                name={`allergies.${allergyTypes[rowIndex * 2]}`}
-                                control={control}
-                                render={({ field }) => (
-                                  <RadioGroupItem
-                                    value="yes"
-                                    checked={field.value === "yes"}
-                                    onClick={() => field.onChange("yes")}
-                                    className="border-orange-400 text-orange-400"
-                                  />
-                                )}
-                              />
-                            </td>
-                            <td className="text-center py-3 px-4">
-                              <Controller
-                                name={`allergies.${allergyTypes[rowIndex * 2]}`}
-                                control={control}
-                                render={({ field }) => (
-                                  <RadioGroupItem
-                                    value="no"
-                                    checked={field.value === "no"}
-                                    onClick={() => field.onChange("no")}
-                                  />
-                                )}
-                              />
-                            </td>
-                            {/* Second column group */}
-                            {allergyTypes[rowIndex * 2 + 1] && (
-                              <>
-                                <td className="py-3 px-4 text-sm">{allergyTypes[rowIndex * 2 + 1]}</td>
-                                <td className="text-center py-3 px-4">
-                                  <Controller
-                                    name={`allergies.${allergyTypes[rowIndex * 2 + 1]}`}
-                                    control={control}
-                                    render={({ field }) => (
-                                      <RadioGroupItem
-                                        value="yes"
-                                        checked={field.value === "yes"}
-                                        onClick={() => field.onChange("yes")}
-                                        className="border-orange-400 text-orange-400"
-                                      />
-                                    )}
-                                  />
-                                </td>
-                                <td className="text-center py-3 px-4">
-                                  <Controller
-                                    name={`allergies.${allergyTypes[rowIndex * 2 + 1]}`}
-                                    control={control}
-                                    render={({ field }) => (
-                                      <RadioGroupItem
-                                        value="no"
-                                        checked={field.value === "no"}
-                                        onClick={() => field.onChange("no")}
-                                      />
-                                    )}
-                                  />
-                                </td>
-                              </>
-                            )}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-4">Your Allergy isn't here? Add your own.</p>
-                  <div className="flex justify-end mt-4">
-                    <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-                      Save
-                    </Button>
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-            </CardContent>
-          </Card>
+            </div>
 
-          {/* Update your Medical History */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-blue-600">Update your Medical History</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Collapsible open={medicalHistoryOpen} onOpenChange={setMedicalHistoryOpen}>
-                <CollapsibleTrigger className="flex items-center justify-between w-full p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
-                  <span className="text-sm text-gray-600">
-                    Stay ahead with your family health history. Update now for better care.
-                  </span>
-                  {medicalHistoryOpen ? (
-                    <ChevronUpIcon className="h-4 w-4 text-gray-400" />
-                  ) : (
-                    <ChevronDownIcon className="h-4 w-4 text-gray-400" />
-                  )}
-                </CollapsibleTrigger>
-                <CollapsibleContent className="mt-4">
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b">
-                          <th className="text-left py-2 px-4 text-sm font-medium text-gray-600">Type</th>
-                          <th className="text-center py-2 px-4 text-sm font-medium text-gray-600">My Self</th>
-                          <th className="text-center py-2 px-4 text-sm font-medium text-gray-600">Mother's Side</th>
-                          <th className="text-center py-2 px-4 text-sm font-medium text-gray-600">Father's Side</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {medicalConditions.map((condition, index) => (
-                          <tr key={index} className="border-b">
-                            <td className="py-3 px-4 text-sm">{condition}</td>
-                            <td className="text-center py-3 px-4">
-                              <Controller
-                                name={`medicalHistory.${condition}.myself`}
-                                control={control}
-                                render={({ field }) => (
-                                  <RadioGroupItem
-                                    value="myself"
-                                    checked={field.value}
-                                    onClick={() => field.onChange(!field.value)}
-                                    className={index === 2 ? "border-orange-400 text-orange-400" : ""}
-                                  />
-                                )}
-                              />
-                            </td>
-                            <td className="text-center py-3 px-4">
-                              <Controller
-                                name={`medicalHistory.${condition}.motherSide`}
-                                control={control}
-                                render={({ field }) => (
-                                  <RadioGroupItem
-                                    value="mother"
-                                    checked={field.value}
-                                    onClick={() => field.onChange(!field.value)}
-                                    className={index === 4 ? "border-orange-400 text-orange-400" : ""}
-                                  />
-                                )}
-                              />
-                            </td>
-                            <td className="text-center py-3 px-4">
-                              <Controller
-                                name={`medicalHistory.${condition}.fatherSide`}
-                                control={control}
-                                render={({ field }) => (
-                                  <RadioGroupItem
-                                    value="father"
-                                    checked={field.value}
-                                    onClick={() => field.onChange(!field.value)}
-                                  />
-                                )}
-                              />
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-4">Your Disease isn't here? Add your own.</p>
-                  <div className="flex justify-end mt-4">
-                    <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-                      Save
-                    </Button>
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-            </CardContent>
-          </Card>
-
-          {/* Surgical History */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-blue-600 text-center">Surgical History</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-sm text-gray-600 mb-6">
-                If you've had a surgery, add it now to keep a complete track of your medical history - because every
-                detail matters when it comes to your health.
-              </p>
-              <Button className="bg-yellow-400 hover:bg-yellow-500 text-black">
-                <PlusIcon className="h-4 w-4 mr-2" />
-                Add Your First Surgery
-              </Button>
-            </CardContent>
-          </Card>
-        </form>
+          </CardContent>
+        </Card>
       </div>
-
-      {/* Footer */}
-      <div className="bg-blue-600 h-20 mt-8"></div>
     </div>
   )
 }
