@@ -22,12 +22,12 @@ import { Badge } from "@/components/ui/badge"
 import { redirect } from "next/dist/server/api-utils"
 import Link from "next/link"
 
-const familyMembers = [
-    { name: "Ankit", avatar: "/placeholder.svg?height=40&width=40", active: false },
-    { name: "Palak", avatar: "/placeholder.svg?height=40&width=40", active: true },
-    { name: "Oindrila", avatar: "/placeholder.svg?height=40&width=40", active: false },
-    { name: "Avani", avatar: "/placeholder.svg?height=40&width=40", active: false },
-]
+// const familyMembers = [
+//     { name: "Ankit", avatar: "/placeholder.svg?height=40&width=40", active: false },
+//     { name: "Palak", avatar: "/placeholder.svg?height=40&width=40", active: true },
+//     { name: "Oindrila", avatar: "/placeholder.svg?height=40&width=40", active: false },
+//     { name: "Avani", avatar: "/placeholder.svg?height=40&width=40", active: false },
+// ]
 
 const medicalServices = [
     {
@@ -102,7 +102,6 @@ const reportTypes = [
 type Detail = {
   personalInfo: {
     name: string;
-    // Add other fields if needed
   };
 };
 
@@ -111,21 +110,18 @@ export default function MedicalDashboard() {
     const [selectedMember, setSelectedMember] = useState("Palak")
     const [viewMode, setViewMode] = useState<"dashboard" | "reports">("dashboard")
     const [details, setDetails] = useState<Detail[]>([])
-const GetData = async (data: any) => {
-    try {
-        const res = await axios.get('/api/get-records', {
-            params: data
-        });
-      const detailsData=   setDetails(res.data);
-      console.log(detailsData)
-    } catch (error) {
-        alert('❌ Server error');
-        console.error(error);
-    }
+const GetData = async (params: any) => {
+  try {
+    const res = await axios.get("/api/get-records", { params });
+    setDetails(res.data.patients); 
+  } catch (error) {
+    alert("❌ Server error");
+    console.error("API error:", error);
+  }
 };
- useEffect(() => {
-  console.log(setDetails);
-}, [GetData]);
+useEffect(() => {
+  GetData({}); // Call it here
+}, []);
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col min-w-full">
             {/* Header */}
