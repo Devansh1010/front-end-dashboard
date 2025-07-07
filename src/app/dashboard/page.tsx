@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState ,useEffect} from "react"
 import {
     PlusIcon,
     FolderIcon,
@@ -14,6 +14,7 @@ import {
     ChevronDownIcon,
     ChevronRightIcon,
 } from "lucide-react"
+import axios from "axios"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -98,11 +99,33 @@ const reportTypes = [
     { name: "Medicine & Vaccine", icon: HeartIcon, count: 6 },
     { name: "All Reports", icon: FileTextIcon, count: 76 },
 ]
+type Detail = {
+  personalInfo: {
+    name: string;
+    // Add other fields if needed
+  };
+};
+
 
 export default function MedicalDashboard() {
     const [selectedMember, setSelectedMember] = useState("Palak")
     const [viewMode, setViewMode] = useState<"dashboard" | "reports">("dashboard")
-
+    const [details, setDetails] = useState<Detail[]>([])
+const GetData = async (data: any) => {
+    try {
+        const res = await axios.get('/api/get-records', {
+            params: data
+        });
+      const detailsData=   setDetails(res.data);
+      console.log(detailsData)
+    } catch (error) {
+        alert('❌ Server error');
+        console.error(error);
+    }
+};
+ useEffect(() => {
+  console.log(setDetails);
+}, [GetData]);
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col min-w-full">
             {/* Header */}
@@ -118,24 +141,23 @@ export default function MedicalDashboard() {
 
             {/* Main Layout */}
             <div className="flex flex-1 max-w-full mx-auto w-full">
-                {/* Left Sidebar */}
                 <div className="w-50 bg-white border-r p-4 flex-shrink-0 drop-shadow-2xl">
                     <div className="space-y-4">
                         <div className="text-center">
                             <p className="text-sm font-medium text-gray-600 mb-4">Palak</p>
                         </div>
-                        {familyMembers.map((member) => (
+                        {details.map((member) => (
                             <div
-                                key={member.name}
-                                className={`flex flex-col items-center cursor-pointer p-2 rounded-lg transition-colors ${member.active ? "bg-blue-50" : "hover:bg-gray-50"
+                                key={member.personalInfo.name}
+                                className={`flex flex-col items-center cursor-pointer p-2 rounded-lg transition-colors ${member.personalInfo ? "bg-blue-50" : "hover:bg-gray-50"
                                     }`}
-                                onClick={() => setSelectedMember(member.name)}
+                                onClick={() => setSelectedMember(member.personalInfo.name)}
                             >
                                 <Avatar className="h-10 w-10 mb-2">
-                                    <AvatarImage src={member.avatar || "/placeholder.svg"} />
-                                    <AvatarFallback>{member.name[0]}</AvatarFallback>
+                                    <AvatarImage src="/placeholder.svg?height=40&width=40" />
+                                    <AvatarFallback>{member.personalInfo.name[0]}</AvatarFallback>
                                 </Avatar>
-                                <span className="text-xs text-gray-600">{member.name}</span>
+                                <span className="text-xs text-gray-600">{member.personalInfo.name}</span>
                             </div>
                         ))}
                         <div className="flex flex-col items-center cursor-pointer p-2 rounded-lg hover:bg-gray-50">
