@@ -1,30 +1,29 @@
-import { Group } from "lucide-react";
-import mongoose, {Schema , Document} from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
-export interface Admin{
-  BloodGroup: string,
-  weight: number,
-  height: number,
-  BMI: number,
-  SocialHistory: string
+export interface Admin {
+    username: string,
+    email: string,
+    password: string
 }
 
 
 
 const AdminSchema: Schema<Admin> = new Schema({
-    BloodGroup:{
-        type:String,required: true
+    username: {
+        type: String,
+        required: true
     },
-    weight:{
-        type:Number,required: true
+
+    email: {
+        type: String,
+        required: true
     },
-    height:{
-        type:Number,required: true
-    },
-    BMI:{
-        type:Number,required: true
+
+    password: {
+        type: String,
+        required: true
     }
 })
 
-const AdminModel = (mongoose.models.AdminData as mongoose.Model<Admin>) || mongoose.model<Admin>("User", AdminSchema) 
+const AdminModel = (mongoose.models.Admin as mongoose.Model<Admin>) || mongoose.model<Admin>("Admin", AdminSchema)
 export default AdminModel
