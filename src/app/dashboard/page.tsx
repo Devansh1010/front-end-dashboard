@@ -1,6 +1,6 @@
 "use client"
 
-import { useState ,useEffect} from "react"
+import { useState, useEffect } from "react"
 import {
     PlusIcon,
     FolderIcon,
@@ -100,9 +100,9 @@ const reportTypes = [
     { name: "All Reports", icon: FileTextIcon, count: 76 },
 ]
 type Detail = {
-  personalInfo: {
-    name: string;
-  };
+    personalInfo: {
+        name: string;
+    };
 };
 
 
@@ -110,18 +110,19 @@ export default function MedicalDashboard() {
     const [selectedMember, setSelectedMember] = useState("Palak")
     const [viewMode, setViewMode] = useState<"dashboard" | "reports">("dashboard")
     const [details, setDetails] = useState<Detail[]>([])
-const GetData = async (params: any) => {
-  try {
-    const res = await axios.get("/api/get-records", { params });
-    setDetails(res.data.patients); 
-  } catch (error) {
-    alert("❌ Server error");
-    console.error("API error:", error);
-  }
-};
-useEffect(() => {
-  GetData({}); // Call it here
-}, []);
+
+    const GetData = async () => {
+        try {
+            const res = await axios.get("/api/get-records");
+            setDetails(res.data.patients);
+        } catch (error) {
+            alert("❌ Server error");
+            console.error("API error:", error);
+        }
+    };
+    useEffect(() => {
+        GetData();
+    }, []);
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col min-w-full">
             {/* Header */}
@@ -149,19 +150,18 @@ useEffect(() => {
                                     }`}
                                 onClick={() => setSelectedMember(member.personalInfo.name)}
                             >
-                                <Avatar className="h-10 w-10 mb-2">
-                                    <AvatarImage src="/placeholder.svg?height=40&width=40" />
-                                    <AvatarFallback>{member.personalInfo.name[0]}</AvatarFallback>
-                                </Avatar>
                                 <span className="text-xs text-gray-600">{member.personalInfo.name}</span>
                             </div>
                         ))}
-                        <div className="flex flex-col items-center cursor-pointer p-2 rounded-lg hover:bg-gray-50">
-                            <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center mb-2">
-                                <PlusIcon className="h-5 w-5 text-gray-400" />
+                        <Link href='/add-data-form' className="">
+
+                            <div className="flex flex-col items-center cursor-pointer p-2 rounded-lg hover:bg-gray-50">
+                                <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center mb-2">
+                                    <PlusIcon className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <span className="text-xs text-gray-600">Add</span>
                             </div>
-                            <span className="text-xs text-gray-600">Add</span>
-                        </div>
+                        </Link>
                     </div>
                 </div>
 
@@ -191,11 +191,12 @@ useEffect(() => {
                 </div>
 
                 {/* Right Sidebar */}
-                <div className="w-55 bg-white border-l p-4 flex-shrink-0 flex flex-col justify-between drop-shadow-2xl">
-                    <div className="p-4 space-y-4">
-                        <Link href='/add-data-form'>
-                            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Add Reports</Button>
-                        </Link>
+                <div className="w-55 bg-white border-l p-4 flex-shrink-2 flex flex-col justify-between drop-shadow-2xl">
+                    <div className="p-4 space-y-5">
+
+
+
+                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Add Reports</Button>
 
 
                         <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black">Create Folder</Button>
@@ -219,7 +220,7 @@ useEffect(() => {
                 </div>
             </div>
 
-        </div>
+        </div >
     )
 
 }
