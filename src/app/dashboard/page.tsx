@@ -114,6 +114,13 @@ export default function MedicalDashboard() {
             <div className="bg-blue-600 text-white p-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <h1 className="text-xl font-semibold">hfiles</h1>
+                     <Link href="/get-data-form">
+                            <div className="flex flex-col items-center cursor-pointer p-2 rounded-lg hover:bg-gray-50">
+                                <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center mb-2">
+                                    <PlusIcon className="h-5 w-5 text-gray-400" />
+                                </div>
+                            </div>
+                        </Link>
                 </div>
             </div>
 
