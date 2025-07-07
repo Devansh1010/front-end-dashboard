@@ -3,212 +3,638 @@
 import { useForm, useFieldArray } from 'react-hook-form';
 import axios from 'axios';
 
-export default function CreateMedicalRecordPage() {
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    formState: { errors }
-  } = useForm({
-    defaultValues: {
-      personalInfo: {
-        name: '',
-        age: '',
-        gender: 'M',
-        bloodGroup: '',
-        weightKg: '',
-        height: { feet: '', inches: '' },
-        BMI: ''
-      },
-      smoking: '',
-      alcoholConsumption: '',
-      drugUse: '',
-      exerciseFrequency: '',
-      dietType: '',
-      medicalPrescription: [
-        {
-          date: '',
-          doctor: '',
-          hospital: '',
-          instructions: '',
-          medications: [{ name: '', frequency: '', duration: '', purpose: '' }]
+import { Button } from "@/components/ui/button"
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import {
+    RadioGroup,
+    RadioGroupItem,
+} from "@/components/ui/radio-group"
+
+
+
+export default function Page() {
+
+    const form = useForm({
+        defaultValues: {
+            personalInfo: {
+                name: '',
+                age: '',
+                gender: 'M',
+                bloodGroup: '',
+                weightKg: '',
+                height: { feet: '', inches: '' },
+                BMI: ''
+            },
+            smoking: "No",
+            alcoholConsumption: "No",
+            drugUse: "No",
+            exerciseFrequency: '',
+            dietType: '',
+            medicalPrescription: [
+                {
+                    date: '',
+                    doctor: '',
+                    hospital: '',
+                    instructions: '',
+                    medications: [{ name: '', frequency: '', duration: '', purpose: '' }]
+                }
+            ],
+            knownAllergies: {
+                drugAllergies: [{ name: '', severity: 'Low' }],
+                foodAllergies: [{ name: '', severity: 'Low' }],
+                environmentalAllergies: [{ name: '', severity: 'Low' }]
+            },
+            medicalHistory: [{ condition: '', diagnosedOn: '', status: 'Ongoing', notes: '' }],
+            surgicalHistory: [{ surgery: '', date: '', hospital: '', surgeon: '', notes: '' }]
         }
-      ],
-      knownAllergies: {
-        drugAllergies: [{ name: '', severity: 'Low' }],
-        foodAllergies: [{ name: '', severity: 'Low' }],
-        environmentalAllergies: [{ name: '', severity: 'Low' }]
-      },
-      medicalHistory: [{ condition: '', diagnosedOn: '', status: 'Ongoing', notes: '' }],
-      surgicalHistory: [{ surgery: '', date: '', hospital: '', surgeon: '', notes: '' }]
-    }
-  });
+    });
 
-  // Prescriptions
-  const { fields: prescriptions, append: addPrescription } = useFieldArray({
-    control,
-    name: 'medicalPrescription'
-  });
+    const { control } = form;
 
-  // Medical History
-  const { fields: medHistory, append: addMedHistory } = useFieldArray({
-    control,
-    name: 'medicalHistory'
-  });
+    const {
+        fields: prescriptionFields,
+        append: addPrescription,
+        remove: removePrescription
+    } = useFieldArray({
+        control,
+        name: "medicalPrescription"
+    });
 
-  // Surgical History
-  const { fields: surgHistory, append: addSurgHistory } = useFieldArray({
-    control,
-    name: 'surgicalHistory'
-  });
+    const {
+        fields: drugAllergyFields,
+        append: addDrugAllergy,
+        remove: removeDrugAllergy
+    } = useFieldArray({
+        control,
+        name: "knownAllergies.drugAllergies"
+    });
 
-  const onSubmit = async (data: any) => {
-    try {
-      const res = await axios.post('/api/add-record', data);
-      if (res.status === 201 || res.status === 200) {
-        alert('✅ Record saved!');
-        reset();
-      } else {
-        alert('❌ Failed to save');
-      }
-    } catch (error) {
-      alert('❌ Server error');
-      console.error(error);
-    }
-  };
+    const {
+        fields: surgicalFields,
+        append: addSurgery,
+        remove: removeSurgery
+    } = useFieldArray({
+        control,
+        name: "surgicalHistory"
+    });
 
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-4xl mx-auto p-6 space-y-6 bg-white rounded shadow-md">
-      {/* Personal Info */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">👤 Personal Info</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <input {...register('personalInfo.name')} placeholder="Name" className="input" />
-          <input type="number" {...register('personalInfo.age')} placeholder="Age" className="input" />
-          <select {...register('personalInfo.gender')} className="input">
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-            <option value="O">Other</option>
-          </select>
-          <input {...register('personalInfo.bloodGroup')} placeholder="Blood Group" className="input" />
-          <input type="number" {...register('personalInfo.weightKg')} placeholder="Weight (kg)" className="input" />
-          <input type="number" {...register('personalInfo.height.feet')} placeholder="Height (Feet)" className="input" />
-          <input type="number" {...register('personalInfo.height.inches')} placeholder="Height (Inches)" className="input" />
-          <input type="number" {...register('personalInfo.BMI')} placeholder="BMI" className="input" />
-        </div>
-      </section>
+    console.log("form options: - ", form)
 
-      {/* Social History */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">🏋️ Social History</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <input {...register('smoking')} placeholder="Smoking" className="input" />
-          <input {...register('alcoholConsumption')} placeholder="Alcohol Consumption" className="input" />
-          <input {...register('drugUse')} placeholder="Drug Use" className="input" />
-          <input {...register('exerciseFrequency')} placeholder="Exercise Frequency" className="input" />
-          <input {...register('dietType')} placeholder="Diet Type" className="input" />
-        </div>
-      </section>
 
-      {/* Medical Prescription */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">💊 Medical Prescriptions</h2>
-        {prescriptions.map((presc, i) => (
-          <div key={presc.id} className="border p-4 mb-4 rounded bg-gray-50">
-            <div className="grid grid-cols-2 gap-4 mb-2">
-              <input {...register(`medicalPrescription.${i}.date`)} placeholder="Date" className="input" />
-              <input {...register(`medicalPrescription.${i}.doctor`)} placeholder="Doctor" className="input" />
-              <input {...register(`medicalPrescription.${i}.hospital`)} placeholder="Hospital" className="input" />
-              <input {...register(`medicalPrescription.${i}.instructions`)} placeholder="Instructions" className="input" />
+
+    const onSubmit = async (data: any) => {
+        try {
+            const res = await axios.post('/api/add-record', data);
+            if (res.status === 201 || res.status === 200) {
+                alert('✅ Record saved!');
+            } else {
+                alert('❌ Failed to save');
+            }
+        } catch (error) {
+            alert('❌ Server error');
+            console.error(error);
+        }
+    };
+
+    return (
+        <div className="max-w-5xl mx-auto px-4 py-10 bg-muted rounded-xl shadow-md">
+            <h2 className="text-3xl font-semibold font-serif text-center text-gray-800 tracking-wide mb-6 border-b pb-2">
+                🩺 Medical Information
+            </h2>
+
+            <div className="bg-white p-6 md:p-10 rounded-lg shadow-inner space-y-8">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+
+                        <div className='flex gap-10'>
+                            <FormField
+                                control={form.control}
+                                name="personalInfo.name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Patient Name: </FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Patient Name" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="personalInfo.age"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Patient Age: </FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Patient Age" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                        <FormField
+                            control={form.control}
+                            name="personalInfo.gender"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Gender</FormLabel>
+                                    <FormControl>
+                                        <RadioGroup
+                                            className="flex gap-6"
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
+                                            <FormItem className="flex items-center space-x-2">
+                                                <FormControl>
+                                                    <RadioGroupItem value="Male" id="gender-male" />
+                                                </FormControl>
+                                                <FormLabel htmlFor="gender-male">Male</FormLabel>
+                                            </FormItem>
+                                            <FormItem className="flex items-center space-x-2">
+                                                <FormControl>
+                                                    <RadioGroupItem value="Female" id="gender-female" />
+                                                </FormControl>
+                                                <FormLabel htmlFor="gender-female">Female</FormLabel>
+                                            </FormItem>
+                                            <FormItem className="flex items-center space-x-2">
+                                                <FormControl>
+                                                    <RadioGroupItem value="Other" id="gender-other" />
+                                                </FormControl>
+                                                <FormLabel htmlFor="gender-other">Other</FormLabel>
+                                            </FormItem>
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+
+                        <div className='flex gap-10'>
+                            <FormField
+                                control={form.control}
+                                name="personalInfo.bloodGroup"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Patient BloodGroup: </FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Blood Group: " {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="personalInfo.weightKg"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Weight : </FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Weignt" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="personalInfo.height.feet"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Height (Feet)</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" placeholder="e.g., 5" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="personalInfo.height.inches"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Height (Inches)</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" placeholder="e.g., 8" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <FormField
+                            control={form.control}
+                            name="smoking"
+                            render={({ field }) => (
+                                <FormItem className="space-y-3">
+                                    <FormLabel>Smoking: </FormLabel>
+                                    <FormControl>
+                                        <RadioGroup
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                            className="flex flex-col"
+                                        >
+                                            <FormItem className="flex items-center gap-3">
+                                                <FormControl>
+                                                    <RadioGroupItem value="Yes" />
+                                                </FormControl>
+                                                <FormLabel className="font-normal">
+                                                    Yes
+                                                </FormLabel>
+                                            </FormItem>
+                                            <FormItem className="flex items-center gap-3">
+                                                <FormControl>
+                                                    <RadioGroupItem value="No" />
+                                                </FormControl>
+                                                <FormLabel className="font-normal">
+                                                    No
+                                                </FormLabel>
+                                            </FormItem>
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="alcoholConsumption"
+                            render={({ field }) => (
+                                <FormItem className="space-y-3">
+                                    <FormLabel>Alcohol Consumption: </FormLabel>
+                                    <FormControl>
+                                        <RadioGroup
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                            className="flex flex-col"
+                                        >
+                                            <FormItem className="flex items-center gap-3">
+                                                <FormControl>
+                                                    <RadioGroupItem value="Yes" />
+                                                </FormControl>
+                                                <FormLabel className="font-normal">
+                                                    Yes
+                                                </FormLabel>
+                                            </FormItem>
+                                            <FormItem className="flex items-center gap-3">
+                                                <FormControl>
+                                                    <RadioGroupItem value="No" />
+                                                </FormControl>
+                                                <FormLabel className="font-normal">
+                                                    No
+                                                </FormLabel>
+                                            </FormItem>
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="drugUse"
+                            render={({ field }) => (
+                                <FormItem className="space-y-3">
+                                    <FormLabel>Drug Use: </FormLabel>
+                                    <FormControl>
+                                        <RadioGroup
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                            className="flex flex-col"
+                                        >
+                                            <FormItem className="flex items-center gap-3">
+                                                <FormControl>
+                                                    <RadioGroupItem value="Yes" />
+                                                </FormControl>
+                                                <FormLabel className="font-normal">
+                                                    Yes
+                                                </FormLabel>
+                                            </FormItem>
+                                            <FormItem className="flex items-center gap-3">
+                                                <FormControl>
+                                                    <RadioGroupItem value="No" />
+                                                </FormControl>
+                                                <FormLabel className="font-normal">
+                                                    No
+                                                </FormLabel>
+                                            </FormItem>
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="exerciseFrequency"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Exercise Frequency</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" placeholder="Daily" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="dietType"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Diet Type</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" placeholder="Daily" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <div className="space-y-6">
+                            <h2 className="text-xl font-semibold">🩺 Medical Prescriptions</h2>
+
+                            {form.watch("medicalPrescription")?.map((_, presIndex) => (
+                                <div
+                                    key={presIndex}
+                                    className="border p-4 rounded-xl space-y-4 shadow-sm bg-white"
+                                >
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {/* Prescription Date */}
+                                        <FormField
+                                            control={form.control}
+                                            name={`medicalPrescription.${presIndex}.date`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Date</FormLabel>
+                                                    <FormControl>
+                                                        <Input type="date" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        {/* Doctor */}
+                                        <FormField
+                                            control={form.control}
+                                            name={`medicalPrescription.${presIndex}.doctor`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Doctor</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="Dr. Smith" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        {/* Hospital */}
+                                        <FormField
+                                            control={form.control}
+                                            name={`medicalPrescription.${presIndex}.hospital`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Hospital</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="ABC Hospital" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        {/* Instructions */}
+                                        <FormField
+                                            control={form.control}
+                                            name={`medicalPrescription.${presIndex}.instructions`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Instructions</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="Take after meal..." {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+
+                                    {/* Medications */}
+                                    <div className="space-y-2">
+                                        <h4 className="font-medium">Medications</h4>
+                                        {form.watch(`medicalPrescription.${presIndex}.medications`)?.map(
+                                            (_, medIndex) => (
+                                                <div
+                                                    key={medIndex}
+                                                    className="grid grid-cols-1 md:grid-cols-4 gap-3"
+                                                >
+                                                    <Input
+                                                        placeholder="Name"
+                                                        {...form.register(
+                                                            `medicalPrescription.${presIndex}.medications.${medIndex}.name`
+                                                        )}
+                                                    />
+                                                    <Input
+                                                        placeholder="Frequency"
+                                                        {...form.register(
+                                                            `medicalPrescription.${presIndex}.medications.${medIndex}.frequency`
+                                                        )}
+                                                    />
+                                                    <Input
+                                                        placeholder="Duration"
+                                                        {...form.register(
+                                                            `medicalPrescription.${presIndex}.medications.${medIndex}.duration`
+                                                        )}
+                                                    />
+                                                    <Input
+                                                        placeholder="Purpose"
+                                                        {...form.register(
+                                                            `medicalPrescription.${presIndex}.medications.${medIndex}.purpose`
+                                                        )}
+                                                    />
+                                                </div>
+                                            )
+                                        )}
+
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() =>
+                                                form.setValue(
+                                                    `medicalPrescription.${presIndex}.medications`,
+                                                    [
+                                                        ...form.watch(
+                                                            `medicalPrescription.${presIndex}.medications`
+                                                        ),
+                                                        { name: "", frequency: "", duration: "", purpose: "" },
+                                                    ]
+                                                )
+                                            }
+                                        >
+                                            ➕ Add Medication
+                                        </Button>
+                                    </div>
+                                </div>
+                            ))}
+
+                            <Button
+                                type="button"
+                                onClick={() =>
+                                    form.setValue("medicalPrescription", [
+                                        ...form.watch("medicalPrescription"),
+                                        {
+                                            date: "",
+                                            doctor: "",
+                                            hospital: "",
+                                            instructions: "",
+                                            medications: [{ name: "", frequency: "", duration: "", purpose: "" }],
+                                        },
+                                    ])
+                                }
+                            >
+                                ➕ Add Prescription
+                            </Button>
+                        </div>
+
+                        <h2 className="text-lg font-semibold mt-6">Drug Allergies</h2>
+                        {drugAllergyFields.map((field, index) => (
+                            <div key={field.id} className="flex gap-3 items-end mb-4">
+                                <FormField
+                                    control={control}
+                                    name={`knownAllergies.drugAllergies.${index}.name`}
+                                    render={({ field }) => (
+                                        <FormItem className="flex-1">
+                                            <FormLabel>Allergy Name</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="e.g. Penicillin" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={control}
+                                    name={`knownAllergies.drugAllergies.${index}.severity`}
+                                    render={({ field }) => (
+                                        <FormItem className="flex-1">
+                                            <FormLabel>Severity</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Low / Medium / High" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <Button type="button" variant="destructive" onClick={() => removeDrugAllergy(index)}>
+                                    Remove
+                                </Button>
+                            </div>
+                        ))}
+                        <Button type="button" onClick={() => addDrugAllergy({ name: '', severity: 'Low' })}>
+                            + Add Drug Allergy
+                        </Button>
+
+                        <h2 className="text-lg font-semibold mt-6">Surgical History</h2>
+                        {surgicalFields.map((field, index) => (
+                            <div key={field.id} className="grid grid-cols-2 gap-4 mb-6">
+                                <FormField
+                                    control={control}
+                                    name={`surgicalHistory.${index}.surgery`}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Surgery Name</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="e.g. Appendix Removal" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={control}
+                                    name={`surgicalHistory.${index}.date`}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Date</FormLabel>
+                                            <FormControl>
+                                                <Input type="date" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={control}
+                                    name={`surgicalHistory.${index}.hospital`}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Hospital</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="e.g. Apollo Hospital" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={control}
+                                    name={`surgicalHistory.${index}.surgeon`}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Surgeon</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Dr. Sharma" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={control}
+                                    name={`surgicalHistory.${index}.notes`}
+                                    render={({ field }) => (
+                                        <FormItem className="col-span-2">
+                                            <FormLabel>Notes</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Extra info (optional)" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <Button type="button" variant="destructive" onClick={() => removeSurgery(index)}>
+                                    Remove
+                                </Button>
+                            </div>
+                        ))}
+                        <Button type="button" onClick={() =>
+                            addSurgery({ surgery: '', date: '', hospital: '', surgeon: '', notes: '' })
+                        }>
+                            + Add Surgery
+                        </Button>
+                        <Button type="submit">Submit</Button>
+                    </form>
+                </Form>
+
             </div>
-            <h4 className="font-semibold mt-2">Medications:</h4>
-            <div className="grid grid-cols-4 gap-2">
-              {presc.medications.map((_, j) => (
-                <div key={j} className="flex flex-col">
-                  <input {...register(`medicalPrescription.${i}.medications.${j}.name`)} placeholder="Name" className="input" />
-                  <input {...register(`medicalPrescription.${i}.medications.${j}.frequency`)} placeholder="Frequency" className="input" />
-                  <input {...register(`medicalPrescription.${i}.medications.${j}.duration`)} placeholder="Duration" className="input" />
-                  <input {...register(`medicalPrescription.${i}.medications.${j}.purpose`)} placeholder="Purpose" className="input" />
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-        <button type="button" onClick={() => addPrescription({
-          date: '', doctor: '', hospital: '', instructions: '',
-          medications: [{ name: '', frequency: '', duration: '', purpose: '' }]
-        })} className="btn">➕ Add Prescription</button>
-      </section>
-
-      {/* Allergies */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">⚠️ Known Allergies</h2>
-        <div className="grid grid-cols-3 gap-4">
-          <input {...register('knownAllergies.drugAllergies.0.name')} placeholder="Drug Allergy" className="input" />
-          <select {...register('knownAllergies.drugAllergies.0.severity')} className="input">
-            <option value="Low">Low</option>
-            <option value="Moderate">Moderate</option>
-            <option value="High">High</option>
-          </select>
-
-          <input {...register('knownAllergies.foodAllergies.0.name')} placeholder="Food Allergy" className="input" />
-          <select {...register('knownAllergies.foodAllergies.0.severity')} className="input">
-            <option value="Low">Low</option>
-            <option value="Moderate">Moderate</option>
-            <option value="High">High</option>
-          </select>
-
-          <input {...register('knownAllergies.environmentalAllergies.0.name')} placeholder="Env Allergy" className="input" />
-          <select {...register('knownAllergies.environmentalAllergies.0.severity')} className="input">
-            <option value="Low">Low</option>
-            <option value="Moderate">Moderate</option>
-            <option value="High">High</option>
-          </select>
         </div>
-      </section>
-
-      {/* Medical History */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">📄 Medical History</h2>
-        {medHistory.map((entry, i) => (
-          <div key={entry.id} className="grid grid-cols-4 gap-4 mb-2">
-            <input {...register(`medicalHistory.${i}.condition`)} placeholder="Condition" className="input" />
-            <input {...register(`medicalHistory.${i}.diagnosedOn`)} placeholder="Diagnosed On" className="input" />
-            <select {...register(`medicalHistory.${i}.status`)} className="input">
-              <option value="Ongoing">Ongoing</option>
-              <option value="Resolved">Resolved</option>
-            </select>
-            <input {...register(`medicalHistory.${i}.notes`)} placeholder="Notes" className="input" />
-          </div>
-        ))}
-        <button type="button" onClick={() => addMedHistory({ condition: '', diagnosedOn: '', status: 'Ongoing', notes: '' })} className="btn">
-          ➕ Add Medical History
-        </button>
-      </section>
-
-      {/* Surgical History */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">🩺 Surgical History</h2>
-        {surgHistory.map((entry, i) => (
-          <div key={entry.id} className="grid grid-cols-5 gap-4 mb-2">
-            <input {...register(`surgicalHistory.${i}.surgery`)} placeholder="Surgery" className="input" />
-            <input {...register(`surgicalHistory.${i}.date`)} placeholder="Date" className="input" />
-            <input {...register(`surgicalHistory.${i}.hospital`)} placeholder="Hospital" className="input" />
-            <input {...register(`surgicalHistory.${i}.surgeon`)} placeholder="Surgeon" className="input" />
-            <input {...register(`surgicalHistory.${i}.notes`)} placeholder="Notes" className="input" />
-          </div>
-        ))}
-        <button type="button" onClick={() => addSurgHistory({ surgery: '', date: '', hospital: '', surgeon: '', notes: '' })} className="btn">
-          ➕ Add Surgical History
-        </button>
-      </section>
-
-      <div className="text-center pt-6">
-        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-lg">
-          ✅ Submit Medical Record
-        </button>
-      </div>
-    </form>
-  );
+    )
 }

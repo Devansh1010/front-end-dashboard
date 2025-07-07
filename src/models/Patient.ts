@@ -84,9 +84,9 @@
             },
             gender: {
                 type: String,
-                enum: ['M', 'F', 'O'],
+                enum: ['Male', 'Female', 'Other'],
                 required: true,
-                default: "M"
+                default: "Male"
             },
             bloodGroup: {
                 type: String,
@@ -101,75 +101,70 @@
                 inches: Number
             },
 
-            BMI: {
-                type: Number,
-                required: true
-            }
-
         },
 
         socialHistory: {
-            smoking: { type: String, required: true },
-            alcoholConsumption: { type: String, required: true },
-            drugUse: { type: String, required: true },
-            exerciseFrequency: { type: String, required: true },
-            dietType: { type: String, required: true }
+            smoking: { type: String,  },
+            alcoholConsumption: { type: String,  },
+            drugUse: { type: String,  },
+            exerciseFrequency: { type: String,  },
+            dietType: { type: String,  }
         },
 
 
         medicalPrescription: [
             {
-                date: { type: String, required: true },
-                doctor: { type: String, required: true },
-                hospital: { type: String, required: true },
+                date: { type: String,  },
+                doctor: { type: String,  },
+                hospital: { type: String,  },
                 medications: [
                     {
-                        name: { type: String, required: true },
-                        frequency: { type: String, required: true },
-                        duration: { type: String, required: true },
-                        purpose: { type: String, required: true }
+                        name: { type: String,  },
+                        frequency: { type: String,  },
+                        duration: { type: String,  },
+                        purpose: { type: String,  }
                     }
                 ],
-                instructions: { type: String, required: true }
+                instructions: { type: String,  }
             }
         ],
 
         knownAllergies: {
             drugAllergies: [
                 {
-                    name: { type: String, required: true },
-                    severity: { type: String, enum: ['Low', 'Moderate', 'High'], required: true }
+                    name: { type: String,  },
+                    severity: { type: String, enum: ['Low', 'Moderate', 'High'],  }
                 }
             ],
             foodAllergies: [
                 {
-                    name: { type: String, required: true },
-                    severity: { type: String, enum: ['Low', 'Moderate', 'High'], required: true }
+                    name: { type: String,  },
+                    severity: { type: String, enum: ['Low', 'Moderate', 'High'],  }
                 }
             ],
             environmentalAllergies: [
                 {
-                    name: { type: String, required: true },
-                    severity: { type: String, enum: ['Low', 'Moderate', 'High'], required: true }
+                    name: { type: String, },
+                    severity: { type: String, enum: ['Low', 'Moderate', 'High'],  }
                 }
             ]
         },
 
         medicalHistory: [
             {
-                condition: { type: String, required: true },
-                diagnosedOn: { type: String, required: true },
-                status: { type: String, enum: ['Ongoing', 'Resolved'], required: true },
+                condition: { type: String,  },
+                diagnosedOn: { type: String,  },
+                status: { type: String, enum: ['Ongoing', 'Resolved'],  },
                 notes: { type: String }
             }
         ],
 
         surgicalHistory: [
             {
-                surgery: { type: String, required: true },
-                date: { type: String, required: true },
-                hospital: { type: String, required: true },
-                surgeon: { type: String, required: true },
+                surgery: { type: String,  },
+                date: { type: String,  },
+                hospital: { type: String,  },
+                surgeon: { type: String,  },
                 notes: { type: String }
             }
         ]

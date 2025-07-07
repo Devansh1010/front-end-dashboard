@@ -2,8 +2,6 @@ import { dbConnect } from "@/lib/dbConnect";
 import Patient from "@/models/Patient";
 
 
-import { NextResponse } from "next/server";
-
 export async function POST(req: Request) {
 
   const {
@@ -26,10 +24,9 @@ export async function POST(req: Request) {
     !personalInfo?.bloodGroup ||
     !personalInfo?.weightKg ||
     !personalInfo?.height?.feet ||
-    !personalInfo?.height?.inches ||
-    !personalInfo?.BMI
+    !personalInfo?.height?.inches 
   ) {
-    return NextResponse.json({
+    return Response.json({
       success: false,
       message: "Some required personalInfo fields are missing",
     }, { status: 400 });
@@ -55,9 +52,11 @@ export async function POST(req: Request) {
       surgicalHistory
     });
 
+    console.log(newPatient)
+
     const saved = await newPatient.save();
 
-    return NextResponse.json({
+    return Response.json({
       success: true,
       message: "Patient record saved successfully",
       data: saved
@@ -65,7 +64,7 @@ export async function POST(req: Request) {
 
   } catch (error: any) {
     console.error("Error saving patient record:", error);
-    return NextResponse.json({
+    return Response.json({
       success: false,
       message: "Failed to save patient record",
       error: error.message
