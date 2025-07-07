@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import {
     PlusIcon,
-    FolderIcon,
     FileTextIcon,
     SyringeIcon,
     HeartIcon,
@@ -11,23 +10,10 @@ import {
     PillIcon,
     ActivityIcon,
     ClipboardIcon,
-    ChevronDownIcon,
-    ChevronRightIcon,
 } from "lucide-react"
 import axios from "axios"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { redirect } from "next/dist/server/api-utils"
 import Link from "next/link"
-
-// const familyMembers = [
-//     { name: "Ankit", avatar: "/placeholder.svg?height=40&width=40", active: false },
-//     { name: "Palak", avatar: "/placeholder.svg?height=40&width=40", active: true },
-//     { name: "Oindrila", avatar: "/placeholder.svg?height=40&width=40", active: false },
-//     { name: "Avani", avatar: "/placeholder.svg?height=40&width=40", active: false },
-// ]
 
 const medicalServices = [
     {
@@ -88,73 +74,75 @@ const medicalServices = [
     },
 ]
 
-const reportTypes = [
-    { name: "Lab Report", icon: FileTextIcon, count: 12 },
-    { name: "Immunization", icon: SyringeIcon, count: 8 },
-    { name: "Prescription", icon: PillIcon, count: 15 },
-    { name: "Radiology", icon: ActivityIcon, count: 5 },
-    { name: "Ophthalmology", icon: EyeIcon, count: 3 },
-    { name: "Dental Report", icon: HeartIcon, count: 7 },
-    { name: "Medical Report", icon: ClipboardIcon, count: 20 },
-    { name: "Medicine & Vaccine", icon: HeartIcon, count: 6 },
-    { name: "All Reports", icon: FileTextIcon, count: 76 },
-]
 type Detail = {
     personalInfo: {
         name: string;
+        age?: number;
+        gender?: string;
+        bloodGroup?: string;
+        weightKg?: number;
+        height?: {
+            feet: number;
+            inches: number;
+        };
+        BMI?: number;
     };
 };
 
-
 export default function MedicalDashboard() {
-    const [selectedMember, setSelectedMember] = useState("Palak")
-    const [viewMode, setViewMode] = useState<"dashboard" | "reports">("dashboard")
     const [details, setDetails] = useState<Detail[]>([])
+    const [selectedMember, setSelectedMember] = useState<Detail | null>(null)
 
     const GetData = async () => {
         try {
-            const res = await axios.get("/api/get-records");
-            setDetails(res.data.patients);
+            const res = await axios.get("/api/get-records")
+            setDetails(res.data.patients)
+            setSelectedMember(res.data.patients[0]) // default selection
         } catch (error) {
-            alert("❌ Server error");
-            console.error("API error:", error);
+            alert("❌ Server error")
+            console.error("API error:", error)
         }
-    };
+    }
+
     useEffect(() => {
-        GetData();
-    }, []);
+        GetData()
+    }, [])
+
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col min-w-full">
             {/* Header */}
             <div className="bg-blue-600 text-white p-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <h1 className="text-xl font-semibold">hfiles</h1>
-                    <Avatar className="h-10 w-10">
-                        <AvatarImage src="/placeholder.svg?height=40&width=40" />
-                        <AvatarFallback className="bg-white text-blue-600">P</AvatarFallback>
-                    </Avatar>
                 </div>
             </div>
 
             {/* Main Layout */}
             <div className="flex flex-1 max-w-full mx-auto w-full">
+                {/* Sidebar */}
                 <div className="w-50 bg-white border-r p-4 flex-shrink-0 drop-shadow-2xl">
                     <div className="space-y-4">
                         <div className="text-center">
-                            <p className="text-sm font-medium text-gray-600 mb-4">Palak</p>
+                            <p className="text-sm font-medium text-gray-600 mb-4">
+                                {selectedMember?.personalInfo.name}
+                            </p>
                         </div>
+
                         {details.map((member) => (
                             <div
                                 key={member.personalInfo.name}
-                                className={`flex flex-col items-center cursor-pointer p-2 rounded-lg transition-colors ${member.personalInfo ? "bg-blue-50" : "hover:bg-gray-50"
-                                    }`}
-                                onClick={() => setSelectedMember(member.personalInfo.name)}
+                                className={`flex flex-col items-center cursor-pointer p-2 rounded-lg transition-colors 
+              ${selectedMember?.personalInfo.name === member.personalInfo.name ? "bg-blue-100" : "hover:bg-gray-50"}`}
+                                onClick={() => setSelectedMember(member)}
                             >
+                                <div className="h-10 w-10 bg-gray-300 rounded-full mb-1 flex items-center justify-center text-white font-bold">
+                                    {member.personalInfo.name.charAt(0)}
+                                </div>
                                 <span className="text-xs text-gray-600">{member.personalInfo.name}</span>
                             </div>
                         ))}
-                        <Link href='/add-data-form' className="">
 
+                        <Link href="/add-data-form">
                             <div className="flex flex-col items-center cursor-pointer p-2 rounded-lg hover:bg-gray-50">
                                 <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center mb-2">
                                     <PlusIcon className="h-5 w-5 text-gray-400" />
@@ -165,42 +153,49 @@ export default function MedicalDashboard() {
                     </div>
                 </div>
 
-                {/* Middle Content */}
+                {/* Middle Section */}
                 <div className="flex-1 p-8 overflow-y-auto">
                     <div className="flex justify-center items-center h-96 relative">
-                        <div className="w-48 h-48 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
-                            <div className="text-6xl">👩‍⚕️</div>
+                        {/* Center circle with avatar */}
+                        <div className="w-48 h-48 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full flex flex-col items-center justify-center text-white shadow-xl">
+                            <div className="text-5xl mb-2">👤</div>
+                            <div className="text-md font-semibold">
+                                {selectedMember?.personalInfo.name || "No Name"}
+                            </div>
                         </div>
 
-                        {medicalServices.map((service) => (
-                            <Button
-                                key={service.id}
-                                variant="outline"
-                                className={`absolute ${service.color} border-2 px-3 py-2 text-xs font-medium hover:scale-105 transition-transform`}
-                                style={service.position}
-                            >
-                                <service.icon className="h-4 w-4 mr-2" />
-                                {service.name}
-                            </Button>
-                        ))}
-                    </div>
+                        {/* Top Center - Blood Group */}
+                        <div className="absolute top-2 text-center text-sm font-medium text-blue-600">
+                            🩸 Blood: {selectedMember?.personalInfo.bloodGroup || "N/A"}
+                        </div>
 
-                    <div className="text-center mt-8">
-                        <h2 className="text-2xl font-bold text-gray-900">Ankit</h2>
+                        {/* Top Left - BMI */}
+                        <div className="absolute top-10 left-10 text-sm font-medium text-purple-600">
+                            📊 BMI: {selectedMember?.personalInfo.BMI || "N/A"}
+                        </div>
+
+                        {/* Top Right - Height */}
+                        <div className="absolute top-10 right-10 text-sm font-medium text-pink-600">
+                            📏 Height: {selectedMember?.personalInfo.height?.feet}'{selectedMember?.personalInfo.height?.inches}"
+                        </div>
+
+                        {/* Bottom Left - Weight */}
+                        <div className="absolute bottom-10 left-10 text-sm font-medium text-green-600">
+                            ⚖️ Weight: {selectedMember?.personalInfo.weightKg || "N/A"} kg
+                        </div>
+
+                        {/* Bottom Right - Gender */}
+                        <div className="absolute bottom-10 right-10 text-sm font-medium text-red-600">
+                            👤 Gender: {selectedMember?.personalInfo.gender || "N/A"}
+                        </div>
                     </div>
                 </div>
 
                 {/* Right Sidebar */}
                 <div className="w-55 bg-white border-l p-4 flex-shrink-2 flex flex-col justify-between drop-shadow-2xl">
                     <div className="p-4 space-y-5">
-
-
-
                         <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Add Reports</Button>
-
-
                         <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black">Create Folder</Button>
-
                         <Button className="w-full bg-yellow-300 hover:bg-yellow-400 text-black">All Reports</Button>
 
                         <div className="pt-4 border-t">
@@ -219,8 +214,7 @@ export default function MedicalDashboard() {
                     </div>
                 </div>
             </div>
-
-        </div >
+        </div>
     )
 
 }
