@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Navbar from "../Navbar/page"
 
 const medicalServices = [
   {
@@ -111,18 +112,19 @@ export default function MedicalDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col min-w-full">
       {/* Header */}
-      <div className="bg-blue-600 text-white p-4">
+      <Navbar/>
+      {/* <div className="bg-blue-600 text-white p-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-semibold">hfiles</h1>
+          <h1>logo</h1>
           <Link href="/get-data-form">
-            <div className="flex flex-col items-center cursor-pointer p-2 rounded-lg hover:bg-gray-50">
+            <div className="flex flex-col items-center cursor-pointer p-2 ">
               <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center mb-2">
                 <PlusIcon className="h-5 w-5 text-gray-400" />
               </div>
             </div>
           </Link>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Layout */}
       <div className="flex flex-1 max-w-full mx-auto w-full">
@@ -237,67 +239,50 @@ export default function MedicalDashboard() {
             </Button>
 
             <div className="pt-4 border-t">
-                  <Button className="px-6 py-8.5 w-full  text-black bg-white border border-gray-300 focus:outline-none hover:bg-white-100">
-              <p className="text-sm text-gray-600 mb-2">52 GB of 100 GB
-                <br/> Left</p>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-blue-600 h-2 rounded-full"
-                  style={{ width: "48%" }}
-                ></div>
-              </div>
-            </Button>
-             
+              <Button className="px-6 py-8.5 w-full  text-black bg-white border border-gray-300 focus:outline-none hover:bg-white-100">
+                <p className="text-sm text-gray-600 mb-2">
+                  52 GB of 100 GB
+                  <br /> Left
+                </p>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-blue-600 h-2 rounded-full"
+                    style={{ width: "48%" }}
+                  ></div>
+                </div>
+              </Button>
             </div>
           </div>
 
           <div className="">
-            
             <Button
               variant="outline"
               size="sm"
               className="w-full bg-transparent px-6 py-8.5 w-full  text-black bg-white border border-gray-300 focus:outline-none hover:bg-white-1"
             >
-                <div className="flex-col">
+              <div className="flex-col">
                 <p className="text-sm text-gray-600 mb-2">Need Storage?</p>
-              Contact Us
+                Contact Us
               </div>
             </Button>
           </div>
         </div>
       </div>
 
-      <footer className="bg-blue-600 rounded-lg">
-        <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-          <span className="text-sm text-gray-500 sm:text-center text-white-400">
-            © 2023{" "}
-            <a href="https://flowbite.com/" className="hover:underline">
-              Flowbite™
-            </a>
-            . All Rights Reserved.
-          </span>
-          <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-white-500 dark:text-gray-400 sm:mt-0">
-            <li>
-              <a href="#" className="hover:underline me-4 md:me-6">
-                About
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline me-4 md:me-6">
-                Privacy Policy
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline me-4 md:me-6">
-                Licensing
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                Contact
-              </a>
-            </li>
-          </ul>
+      <footer className="bg-blue-600">
+        <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between grid grid-cols-4 gap-4 text-white">
+          <div>
+            <span className="pr-8 ...">Terms & Conditons</span>
+            <span>| Privacy Policy</span>
+          </div>
+          <div>
+            <span className="pr-8 ...">FAQs</span>
+            <span>| Copyright@2024</span>
+          </div>
+          <div>
+            <span className="pr-8 ...">9999999999</span>
+            <span>| contact@hfiles.in</span>
+          </div>
         </div>
       </footer>
     </div>
