@@ -5,11 +5,19 @@ export async function GET(req: Request) {
   await dbConnect();
 
   try {
-    const { name,_id } = await req.json();
-    const PatientNameGetData = await Patient.findOne({
-      name,
-      _id,
-    });
+    const { id } = await req.json();
+    const PatientNameGetData = await Patient.findOne(id);
+
+    if (!PatientNameGetData) {
+      return Response.json(
+        {
+          success: false,
+          message: "Patient record Not found",
+          PatientNameGetData: {}
+        },
+        { status: 401 }
+      );
+    }
 
     return Response.json(
       {
@@ -22,8 +30,8 @@ export async function GET(req: Request) {
   } catch (error) {
     return Response.json(
       {
-        success: true,
-        message: "Error getting patients",
+        success: false,
+        message: "Error getting patients details",
       },
       { status: 500 }
     );
