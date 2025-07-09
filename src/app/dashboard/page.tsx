@@ -60,12 +60,6 @@ export default function MedicalDashboard() {
           <div className="space-y-4">
             {/* User dropdown for small screens */}
             <div className="w-full px-4 py-4 lg:hidden">
-              <label
-                htmlFor="userSelect"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Select User
-              </label>
               <select
                 id="userSelect"
                 className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
@@ -85,18 +79,14 @@ export default function MedicalDashboard() {
                     {member.personalInfo.name}
                   </option>
                 ))}
-                <option>
-                  {" "}
-                  <Link href="/add-data-form">
-                    <div className="flex flex-col items-center cursor-pointer p-2 rounded-lg hover:bg-gray-50">
-                      <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center mb-2">
-                        <PlusIcon className="h-5 w-5 text-gray-400" />
-                      </div>
-                      <span className="text-xs text-gray-600">Add</span>
-                    </div>
-                  </Link>
-                </option>
               </select>
+              <Button className="w-full bg-yellow-300 hover:bg-yellow-400 text-black mt-6 ...">
+                <Link href="/add-data-form">
+                  <div className="flex flex-col items-center cursor-pointer p-2 rounded-lg hover:bg-gray-50">
+                    <span className="text-xs text-gray-600">Add</span>
+                  </div>
+                </Link>
+              </Button>
             </div>
 
             {/* Sidebar for large screens */}
@@ -138,67 +128,82 @@ export default function MedicalDashboard() {
           </div>
         </div>
 
-        {/* Middle Section */}
-        <div className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
-          <div className="flex justify-center items-center h-[25rem] sm:h-[30rem] relative">
+        {/* Middle Section (Desktop only) */}
+        <div className="hidden md:flex flex-1 items-center justify-center p-8 overflow-y-auto bg-white">
+          <div className="relative w-full max-w-5xl h-[28rem] flex items-center justify-center">
             {/* Left Column */}
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex flex-col space-y-8 text-left">
-              <div className="flex items-center space-x-4 text-purple-600">
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 flex flex-col space-y-6 text-left">
+              <div className="flex items-center space-x-3 text-purple-600">
                 <div className="text-3xl">📈</div>
-                <div className="text-base font-semibold">Lab Report</div>
+                <div className="text-sm font-medium">Lab Report</div>
               </div>
-
-              <div className="flex items-center space-x-4 text-blue-600">
+              <div className="flex items-center space-x-3 text-blue-600">
                 <div className="text-3xl">💉</div>
-                <div className="text-base font-semibold">Immunisation</div>
+                <div className="text-sm font-medium">Immunisation</div>
               </div>
-
-              <div className="flex items-center space-x-4 text-green-600">
+              <div className="flex items-center space-x-3 text-green-600">
                 <div className="text-3xl">⚖️</div>
-                <div className="text-base font-semibold">
-                  Medications / Prescription
-                </div>
+                <div className="text-sm font-medium">Medications</div>
               </div>
-
-              <div className="flex items-center space-x-4 text-red-600">
+              <div className="flex items-center space-x-3 text-red-600">
                 <div className="text-3xl">🩻</div>
-                <div className="text-base font-semibold">Radiology</div>
+                <div className="text-sm font-medium">Radiology</div>
               </div>
             </div>
 
             {/* Center Circle */}
-            <div className="w-48 h-48 sm:w-56 sm:h-56 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full flex flex-col items-center justify-center text-white shadow-2xl z-10">
+            <div className="w-52 h-52 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full shadow-xl flex flex-col items-center justify-center text-white z-10">
               <div className="text-6xl mb-2">👤</div>
-              <div className="text-lg font-semibold text-center">
+              <div className="text-base font-semibold text-center">
                 {selectedMember?.personalInfo.name || "No Name"}
               </div>
             </div>
 
             {/* Right Column */}
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col space-y-8 text-right">
-              <div className="flex items-center space-x-4 text-pink-600 justify-end">
-                <div className="text-base font-semibold">Ophthalmology</div>
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col space-y-6 text-right">
+              <div className="flex items-center space-x-3 text-pink-600 justify-end">
+                <div className="text-sm font-medium">Ophthalmology</div>
                 <div className="text-3xl">👁️</div>
               </div>
-
-              <div className="flex items-center space-x-4 text-yellow-600 justify-end">
-                <div className="text-base font-semibold">Dental Report</div>
+              <div className="flex items-center space-x-3 text-yellow-600 justify-end">
+                <div className="text-sm font-medium">Dental Report</div>
                 <div className="text-3xl">🦷</div>
               </div>
-
-              <div className="flex items-center space-x-4 text-blue-500 justify-end">
-                <div className="text-base font-semibold">Special Report</div>
+              <div className="flex items-center space-x-3 text-blue-500 justify-end">
+                <div className="text-sm font-medium">Special Report</div>
                 <div className="text-3xl">🧬</div>
               </div>
-
-              <div className="flex items-center space-x-4 text-indigo-500 justify-end">
-                <div className="text-base font-semibold">
-                  Mediclaim & Invoice
-                </div>
+              <div className="flex items-center space-x-3 text-indigo-500 justify-end">
+                <div className="text-sm font-medium">Mediclaim & Invoice</div>
                 <div className="text-3xl">💰</div>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* mobile view */}
+        <div className="flex md:hidden flex-wrap justify-center items-center gap-4 p-4 bg-white">
+          {[
+            { icon: "📈", label: "Lab Report" },
+            { icon: "💉", label: "Immunisation" },
+            { icon: "⚖️", label: "Medications" },
+            { icon: "🩻", label: "Radiology" },
+            { icon: "👁️", label: "Ophthalmology" },
+            { icon: "🦷", label: "Dental Report" },
+            { icon: "🧬", label: "Special Report" },
+            { icon: "💰", label: "Mediclaim & Invoice" },
+            { icon: "📂", label: "Folders" },
+          ].map((item, index) => (
+            <div
+              key={index}
+              className="w-24 h-24 flex flex-col items-center justify-center border rounded-lg shadow-sm hover:shadow-md transition"
+            >
+              <div className="text-3xl mb-1">{item.icon}</div>
+              <div className="text-xs text-center font-medium">
+                {item.label}
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Right Sidebar */}
