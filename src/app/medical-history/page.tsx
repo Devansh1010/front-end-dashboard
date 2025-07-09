@@ -35,6 +35,8 @@ export default function MedicalHistory(id: any) {
 
   const [patientRecord, setPatientRecord] = useState({});
 
+  // TODO: display this data to appripriat form
+  // TODO: create forms for different section of the full form part
   useEffect(() => {
     const getPatientData = async () => {
         try {

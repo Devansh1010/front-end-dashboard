@@ -16,29 +16,23 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Navbar from "../Navbar/page";
 
-type Detail = {
-  personalInfo: {
-    name: string;
-    age?: number;
-    gender?: string;
-    bloodGroup?: string;
-    weightKg?: number;
-    height?: {
-      feet: number;
-      inches: number;
-    };
-    BMI?: number;
-  };
-};
+type Details = {
+  name: string
+   id: string
+}
+
+
 
 export default function MedicalDashboard() {
-  const [details, setDetails] = useState<Detail[]>([]);
-  const [selectedMember, setSelectedMember] = useState<Detail | null>(null);
+  const [patientNames, setPatientNames] = useState<Details[]>([]);
+  const [patientIds, setPatientIds] = useState<Details[]>([]);
+  const [selectedMember, setSelectedMember] = useState<Details[] | null>(null);
 
   const GetData = async () => {
     try {
-      const res = await axios.get("/api/get-records");
-      setDetails(res.data.patients);
+      const res = await axios.get("/api/get-records-details");
+      setPatientNames(res.data.names);
+      setPatientIds(res.data.ids);
       setSelectedMember(res.data.patients[0]);
     } catch (error) {
       alert("❌ Server error");
@@ -63,10 +57,10 @@ export default function MedicalDashboard() {
               <select
                 id="userSelect"
                 className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                value={selectedMember?.personalInfo.name}
+                value={selectedMember?.name}
                 onChange={(e) => {
-                  const selected = details.find(
-                    (m) => m.personalInfo.name === e.target.value
+                  const selected = patientNames.find(
+                    (m) => m.name === e.target.value
                   );
                   if (selected) setSelectedMember(selected);
                 }}
