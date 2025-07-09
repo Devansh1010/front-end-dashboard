@@ -1,114 +1,213 @@
+"use client"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@/components/ui/radio-group"
+import { useForm } from "react-hook-form"
+import { useState } from "react"
+import { Separator } from "@/components/ui/separator"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function MedicalHistory() {
+
+  const [name, setName] = useState("Vivek");
+
+  const form = useForm()
+  const onSubmit = () => {
+
+  }
+
+  const habitQuestions = [
+    "Do you exercise regularly?",
+    "Do you consume alcohol?",
+    "Do you smoke?",
+    "Do you drink caffeine?",
+    "Do you get enough sleep?",
+  ]
+
   return (
-    <div className="max-w-7xl mx-auto px-4 pt-5">
+    <div className="main-body flex flex-col h-full w-full justify-center items-center p-5">
+      <div className="main-card flex w-250  h-full shadow-xl rounded-lg">
+        <div className="left-part w-1/3 bg-blue-200 p-4">
 
-      {/* Header */}
-      <div className="mb-4 text-center">
-        <Link href="/api/dashboard">
-          <Button variant="link" className="absolute left-4 top-5 p-0 h-6 text-lg">Back</Button>
-        </Link>
+          <div className="flex flex-col items-center justify-center mb-5">
+            <Avatar className="h-40 w-40">  {/* Default is h-10 w-10 */}
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <h1 className="text-center font-bold text-blue-700 text-2xl"> {name}</h1>
+          </div>
+          <div className="form-container">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <FormField
+                  control={form.control}
+                  name="Name"
+                  render={({ field }) => (
+                    <FormItem className="flex gap-2">
+                      <FormLabel>Blood Group:</FormLabel>
+                      <FormControl>
+                        <Input placeholder={name} {...field} className="w-20" />
+                      </FormControl>
+                      <FormDescription>
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="Name"
+                  render={({ field }) => (
+                    <FormItem className="flex gap-2">
+                      <FormLabel>Weight:</FormLabel>
+                      <FormControl>
+                        <Input placeholder={name} {...field} className="w-20" />
+                      </FormControl>
+                      <FormDescription>
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="height" // This will be an object containing feet and inches
+                  render={({ field }) => (
+                    <FormItem className="flex items-center gap-2">
+                      <FormLabel>Height:</FormLabel>
+                      <FormControl>
+                        <div className="flex items-center gap-2">
+                          {/* Feet input */}
+                          <Input
+                            type="number"
+                            placeholder="Feet"
+                            className="w-20"
+                            value={field.value?.feet || ''}
+                            onChange={(e) => {
+                              field.onChange({
+                                ...field.value,
+                                feet: e.target.value
+                              });
+                            }}
+                          />
+                          <span>ft</span>
 
-        <h2 className="text-xl font-bold font-serif mt-2">
-          Your Complete Medical History, always at your fingertips with <span className="text-blue-800">HFiles</span>
-        </h2>
-        <hr className="w-24 h-[2px] mx-auto bg-black border-0 rounded my-2" />
+                          {/* Inches input */}
+                          <Input
+                            type="number"
+                            placeholder="Inches"
+                            className="w-20"
+                            value={field.value?.inches || ''}
+                            onChange={(e) => {
+                              field.onChange({
+                                ...field.value,
+                                inches: e.target.value
+                              });
+                            }}
+                          />
+                          <span>in</span>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="Name"
+                  render={({ field }) => (
+                    <FormItem className="flex gap-2">
+                      <FormLabel>BMI:</FormLabel>
+                      <FormControl>
+                        <Input placeholder={name} {...field} className="w-20" />
+                      </FormControl>
+                      <FormDescription>
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </form>
+            </Form>
+          </div>
+        </div>
+        <div className="right-part w-2/3 p-4">
+          <h1 className="text-center font-bold text-3xl text-blue-700">Social History</h1>
+          <p className="text-center mt-2 text-gray-500">Lorem ipsum dolor sit amet consectetur.</p>
+          <hr className="border-1 m-2" />
 
-        <Button variant="outline" className="w-24 h-8 mt-2">Share</Button>
-      </div>
-
-      {/* Main Card */}
-      <div className="flex justify-center">
-        <Card className="w-full shadow-lg max-w-6xl">
-          <CardContent className="flex flex-col lg:flex-row gap-6 p-0">
-
-            {/* LEFT SIDE: PROFILE (40%) */}
-            <div className="w-full lg:w-2/5 bg-blue-50 py-8 px-6 flex flex-col items-center justify-start space-y-6">
-              {/* Avatar + Name */}
-              <div className="flex flex-col items-center">
-                <Avatar className="w-40 h-40">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback className="text-3xl">AN</AvatarFallback>
-                </Avatar>
-                <p className="text-2xl font-bold mt-4">Ankit</p>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="border rounded-lg overflow-hidden">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs text-blue-500 font-bold uppercase tracking-wider">
+                        Lifestyle Habit Questions
+                      </th>
+                      <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Daily
+                      </th>
+                      <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Frequently
+                      </th>
+                      <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Never
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {habitQuestions.map((question, index) => (
+                      <tr key={index}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {question}
+                        </td>
+                        {["daily", "frequently", "never"].map((frequency) => (
+                          <td key={frequency} className="px-6 py-4 whitespace-nowrap text-center">
+                            <FormField
+                              control={form.control}
+                              name={`habits.${question.toLowerCase().replace(/\?/g, '').replace(/\s+/g, '_')}`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <RadioGroup
+                                      onValueChange={field.onChange}
+                                      value={field.value}
+                                      className="flex justify-center"
+                                    >
+                                      <RadioGroupItem value={frequency} />
+                                    </RadioGroup>
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-
-              {/* Profile Info with Inputs */}
-              <div className="w-full max-w-md grid grid-cols-2 gap-6">
-                {/* Labels */}
-                <div className="text-right space-y-4 pr-4">
-                  <p><strong>Age:</strong></p>
-                  <p><strong>Gender:</strong></p>
-                  <p><strong>Blood Group:</strong></p>
-                  <p><strong>Weight:</strong></p>
-                  <p><strong>Height:</strong></p>
-                  <p><strong>BMI:</strong></p>
-                </div>
-
-                {/* Inputs */}
-                <div className="space-y-4">
-                  <Input type="number" placeholder="28" />
-                  <Input type="text" placeholder="Male" />
-                  <Input type="text" placeholder="B+" />
-                  <Input type="number" placeholder="70" />
-                  <Input type="text" placeholder="5'8&quot;" />
-                  <Input type="text" placeholder="23.2" />
-                </div>
-              </div>
-            </div>
-
-            {/* RIGHT SIDE: SOCIAL HISTORY (60%) */}
-            <div className="w-full lg:w-3/5 py-8 px-6 flex flex-col justify-start">
-              <h3 className="text-2xl font-semibold text-center mb-6">🩺 Social History</h3>
-
-              {/* Answer Header */}
-              <div className="grid grid-cols-4 font-medium text-sm text-gray-600 mb-4 px-2">
-                <div className="col-span-1"></div>
-                <div className="text-center">Yes</div>
-                <div className="text-center">No</div>
-                <div className="text-center">Occasionally</div>
-              </div>
-
-              {/* Questions List */}
-              <div className="space-y-6">
-                {[
-                  { id: "smoke", label: "Do you smoke?" },
-                  { id: "alcohol", label: "Do you consume alcohol?" },
-                  { id: "exercise", label: "Do you exercise regularly?" },
-                  { id: "diet", label: "Do you follow a specific diet?" }
-                ].map((question) => (
-                  <div key={question.id} className="mb-4">
-                    <Label className="block text-md font-medium mb-1">{question.label}</Label>
-                    <RadioGroup defaultValue="no" className="flex gap-6">
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="yes" id={`${question.id}-yes`} />
-                        <Label htmlFor={`${question.id}-yes`}>Yes</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="no" id={`${question.id}-no`} />
-                        <Label htmlFor={`${question.id}-no`}>No</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="occasionally" id={`${question.id}-occasionally`} />
-                        <Label htmlFor={`${question.id}-occasionally`}>Occasionally</Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-                ))}
-              </div>
-
-            </div>
-
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+              <Button type="submit" className="mt-4">
+                Submit
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </div >
+    </div >
   )
 }

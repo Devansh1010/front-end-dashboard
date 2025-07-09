@@ -251,6 +251,8 @@ export default function Page() {
                                 )}
                             />
                         </div>
+
+                        <Button className='m-2'> Save </Button>
                         <FormField
                             control={form.control}
                             name="smoking"
@@ -331,7 +333,7 @@ export default function Page() {
                                             defaultValue={field.value}
                                             className="flex flex-col"
                                         >
-                                            <FormItem className="flex items-center gap-3">
+                                            <FormItem className="flex items-center gap-3" >
                                                 <FormControl>
                                                     <RadioGroupItem value="Yes" />
                                                 </FormControl>
