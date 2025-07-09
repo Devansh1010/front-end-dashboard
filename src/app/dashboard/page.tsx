@@ -26,14 +26,15 @@ type Details = {
 export default function MedicalDashboard() {
   const [patientNames, setPatientNames] = useState<Details[]>([]);
   const [patientIds, setPatientIds] = useState<Details[]>([]);
-  const [selectedMember, setSelectedMember] = useState<Details[] | null>(null);
+  const [selectedMember, setSelectedMember] = useState<Details | null>(null);
 
   const GetData = async () => {
     try {
       const res = await axios.get("/api/get-records-details");
+      console.log(res.data.names[0])
       setPatientNames(res.data.names);
       setPatientIds(res.data.ids);
-      setSelectedMember(res.data.patients[0]);
+      // setSelectedMember(res.data.patients[0]);
     } catch (error) {
       alert("❌ Server error");
       console.error("API error:", error);
@@ -65,12 +66,12 @@ export default function MedicalDashboard() {
                   if (selected) setSelectedMember(selected);
                 }}
               >
-                {details.map((member) => (
+                {patientNames.map((member) => (
                   <option
-                    key={member.personalInfo.name}
-                    value={member.personalInfo.name}
+                    key={member.name}
+                    value={member.name}
                   >
-                    {member.personalInfo.name}
+                    {member.name}
                   </option>
                 ))}
               </select>
@@ -87,25 +88,25 @@ export default function MedicalDashboard() {
             <div className="hidden lg:block">
               <div className="text-center">
                 <p className="text-sm font-medium text-gray-600 mb-4">
-                  {selectedMember?.personalInfo.name}
+                  {selectedMember?.name}
                 </p>
               </div>
-              {details.map((member) => (
+              {patientNames.map((member) => (
                 <div
-                  key={member.personalInfo.name}
+                  key={member.name}
                   className={`flex flex-col items-center cursor-pointer p-2 rounded-lg transition-colors  
         ${
-          selectedMember?.personalInfo.name === member.personalInfo.name
+          selectedMember?.name === member.name
             ? "bg-blue-100"
             : "hover:bg-gray-50"
         }`}
                   onClick={() => setSelectedMember(member)}
                 >
                   <div className="h-10 w-10 bg-gray-300 rounded-full mb-1 flex items-center justify-center text-white font-bold">
-                    {member.personalInfo.name.charAt(0)}
+                    {member.name}
                   </div>
                   <span className="text-xs text-gray-600 underline underline-offset-2">
-                    {member.personalInfo.name}
+                    {member.name}
                   </span>
                 </div>
               ))}
@@ -149,7 +150,7 @@ export default function MedicalDashboard() {
             <div className="w-52 h-52 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full shadow-xl flex flex-col items-center justify-center text-white z-10">
               <div className="text-6xl mb-2">👤</div>
               <div className="text-base font-semibold text-center">
-                {selectedMember?.personalInfo.name || "No Name"}
+                {selectedMember?.name || "No Name"}
               </div>
             </div>
 

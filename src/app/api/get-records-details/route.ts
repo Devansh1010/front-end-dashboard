@@ -11,7 +11,7 @@ export async function GET(req: Request) {
 
         const patients = await Patient.find()
 
-        const names = patients.map((p) => p.name)
+        const names = patients.map((p) => p.personalInfo.name)
         const ids = patients.map((p) => p._id)
 
         if (!patients) {
