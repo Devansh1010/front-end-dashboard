@@ -66,9 +66,9 @@ export default function MedicalDashboard() {
                   if (selected) setSelectedMember(selected);
                 }}
               >
-                {patientNames.map((member) => (
+                {patientNames.map((member, index) => (
                   <option
-                    key={member.name}
+                    key={index}
                     value={member.name}
                   >
                     {member.name}
@@ -91,9 +91,9 @@ export default function MedicalDashboard() {
                   {selectedMember?.name}
                 </p>
               </div>
-              {patientNames.map((member) => (
+              {patientNames.map((member, index) => (
                 <div
-                  key={member.name}
+                  key={index}
                   className={`flex flex-col items-center cursor-pointer p-2 rounded-lg transition-colors  
         ${
           selectedMember?.name === member.name
