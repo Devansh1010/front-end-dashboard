@@ -20,6 +20,16 @@ import { useState } from "react"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 export default function MedicalHistory() {
 
   const [name, setName] = useState("Vivek");
@@ -54,11 +64,11 @@ export default function MedicalHistory() {
 
   return (
     <div className="main-body flex flex-col h-full max-w-400 justify-center items-center p-5">
-      <div className="main-card flex w-300  h-full shadow-xl rounded-lg">
-        <div className="left-part w-1/3 bg-blue-200 p-4">
-
+      <div className="main-card flex flex-col md:flex-row w-full md:w-300 h-full shadow-xl rounded-lg">
+        {/* Left Part - Avatar and Form */}
+        <div className="w-full max-w-4xl  md:w-1/3 bg-white md:bg-blue-100 p-4 order-1 md:order-">
           <div className="flex flex-col items-center justify-center mb-5">
-            <Avatar className="h-40 w-40">  {/* Default is h-10 w-10 */}
+            <Avatar className="h-40 w-40">
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
@@ -67,6 +77,7 @@ export default function MedicalHistory() {
           <div className="form-container">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                {/* Form fields remain the same */}
                 <FormField
                   control={form.control}
                   name="Name"
@@ -76,8 +87,6 @@ export default function MedicalHistory() {
                       <FormControl>
                         <Input placeholder={name} {...field} className="w-20" />
                       </FormControl>
-                      <FormDescription>
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -91,21 +100,18 @@ export default function MedicalHistory() {
                       <FormControl>
                         <Input placeholder={name} {...field} className="w-20" />
                       </FormControl>
-                      <FormDescription>
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
-                  name="height" // This will be an object containing feet and inches
+                  name="height"
                   render={({ field }) => (
                     <FormItem className="flex items-center gap-2">
                       <FormLabel>Height:</FormLabel>
                       <FormControl>
                         <div className="flex items-center gap-2">
-                          {/* Feet input */}
                           <Input
                             type="number"
                             placeholder="Feet"
@@ -119,8 +125,6 @@ export default function MedicalHistory() {
                             }}
                           />
                           <span>ft</span>
-
-                          {/* Inches input */}
                           <Input
                             type="number"
                             placeholder="Inches"
@@ -149,8 +153,6 @@ export default function MedicalHistory() {
                       <FormControl>
                         <Input placeholder={name} {...field} className="w-20" />
                       </FormControl>
-                      <FormDescription>
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -159,14 +161,17 @@ export default function MedicalHistory() {
             </Form>
           </div>
         </div>
-        <div className="right-part w-2/3 p-4">
+
+        {/* Right Part - Social History */}
+        <div className="w-full md:w-2/3 p-4 order-3 md:order-2">
           <h1 className="text-center font-bold text-3xl text-blue-700">Social History</h1>
           <p className="text-center mt-2 text-gray-500">Lorem ipsum dolor sit amet consectetur.</p>
           <hr className="border-1 m-2" />
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="border rounded-lg overflow-hidden">
+              {/* Desktop: Table Layout */}
+              <div className="hidden md:block border rounded-lg overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
@@ -216,47 +221,85 @@ export default function MedicalHistory() {
                   </tbody>
                 </table>
               </div>
-              <Button type="submit" className="mt-4">
+
+              {/* Mobile: List Layout */}
+              <div className="md:hidden space-y-4">
+                <ol className="list-decimal list-inside space-y-6">
+                  {habitQuestions.map((question, index) => (
+                    <li key={index} className="pb-4 border-b last:border-b-0">
+                      <div className="flex flex-col">
+                        <span className="font-medium text-gray-900 mb-3">{question}</span>
+                        <div className="flex justify-between items-center">
+                          {["daily", "frequently", "never"].map((frequency) => (
+                            <div key={frequency} className="flex items-center">
+                              <span className="text-xs text-gray-500 mr-2 capitalize">{frequency}</span>
+                              <FormField
+                                control={form.control}
+                                name={`habits.${question.toLowerCase().replace(/\?/g, '').replace(/\s+/g, '_')}`}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormControl>
+                                      <RadioGroup
+                                        onValueChange={field.onChange}
+                                        value={field.value}
+                                      >
+                                        <RadioGroupItem value={frequency} />
+                                      </RadioGroup>
+                                    </FormControl>
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              <Button type="submit" className="mt-4 w-full md:w-auto bg-blue-700">
                 Submit
               </Button>
             </form>
           </Form>
         </div>
-      </div >
+      </div>
 
-      <div className="mt-5">
+      {/* Medical Prescription */}
+      <div className="mt-5 w-full md:w-300 order-4">
         <h1 className="mt-5 font-bold text-xl text-blue-600">View medical Precrisption</h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-
-            <div className="flex gap-3 justify-center items-center">
+            <div className="flex flex-col md:flex-row gap-3 justify-center items-center">
               <FormField
                 control={form.control}
                 name="preciption"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-full">
                     <FormControl>
-                      <Input placeholder="shadcn" {...field} className="w-200" />
+                      <Input placeholder="shadcn" {...field} className="w-full" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit">Medical Pricription</Button>
+              <Button type="submit" className="w-full md:w-auto  bg-blue-700">Medical Pricription</Button>
             </div>
           </form>
         </Form>
-
       </div>
 
-      <div className="flex h-full w-300 gap-6 p-6">
-        {/* Left Section - Lifestyle Habits */}
-        <div className="flex-1 bg-white rounded-lg shadow-md p-6">
+      {/* Lifestyle and Allergies */}
+      <div className="flex flex-col md:flex-row h-full w-full md:w-300 gap-6 m-5 order-5">
+        {/* Lifestyle Habits */}
+        <div className="flex-1 bg-white rounded-lg shadow-md p-6 order-1 md:order-1">
           <h2 className="text-xl font-bold mb-4 text-blue-700">Lifestyle Habits</h2>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="border rounded-lg overflow-hidden">
+              <div className="border rounded-lg overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
+                  {/* Table content remains the same */}
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Type</th>
@@ -319,13 +362,14 @@ export default function MedicalHistory() {
           </Form>
         </div>
 
-        {/* Right Section - Allergies */}
-        <div className="flex-1 bg-white rounded-lg shadow-md p-6">
+        {/* Allergies */}
+        <div className="flex-1 bg-white rounded-lg shadow-md p-6 order-2 md:order-2">
           <h2 className="text-xl font-bold mb-4 text-blue-700">Allergies (4 Common)</h2>
           <Form {...allergiesForm}>
             <form onSubmit={allergiesForm.handleSubmit(onSubmitAllergies)} className="space-y-6">
-              <div className="border rounded-lg overflow-hidden">
+              <div className="border rounded-lg overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
+                  {/* Table content remains the same */}
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Allergen</th>
@@ -352,7 +396,6 @@ export default function MedicalHistory() {
                               name='allergies.peanuts'
                               render={({ field }) => (
                                 <RadioGroup
-                                  // value={field.value}
                                   onValueChange={field.onChange}
                                   className="flex justify-center"
                                 >
@@ -367,7 +410,6 @@ export default function MedicalHistory() {
                               name='allergies.dairy'
                               render={({ field }) => (
                                 <RadioGroup
-                                  // value={field.value}
                                   onValueChange={field.onChange}
                                   className="flex justify-center"
                                 >
@@ -387,15 +429,79 @@ export default function MedicalHistory() {
         </div>
       </div>
 
+      <div className="w-full m-5 md:w-300 order-4">
+        <h2 className="font-bold text-blue-600 text-xl m-1">Update your Allergies</h2>
+        <Select>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select a timezone" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>North America</SelectLabel>
+              <SelectItem value="est">Eastern Standard Time (EST)</SelectItem>
+              <SelectItem value="cst">Central Standard Time (CST)</SelectItem>
+              <SelectItem value="mst">Mountain Standard Time (MST)</SelectItem>
+              <SelectItem value="pst">Pacific Standard Time (PST)</SelectItem>
+              <SelectItem value="akst">Alaska Standard Time (AKST)</SelectItem>
+              <SelectItem value="hst">Hawaii Standard Time (HST)</SelectItem>
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>Europe & Africa</SelectLabel>
+              <SelectItem value="gmt">Greenwich Mean Time (GMT)</SelectItem>
+              <SelectItem value="cet">Central European Time (CET)</SelectItem>
+              <SelectItem value="eet">Eastern European Time (EET)</SelectItem>
+              <SelectItem value="west">
+                Western European Summer Time (WEST)
+              </SelectItem>
+              <SelectItem value="cat">Central Africa Time (CAT)</SelectItem>
+              <SelectItem value="eat">East Africa Time (EAT)</SelectItem>
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>Asia</SelectLabel>
+              <SelectItem value="msk">Moscow Time (MSK)</SelectItem>
+              <SelectItem value="ist">India Standard Time (IST)</SelectItem>
+              <SelectItem value="cst_china">China Standard Time (CST)</SelectItem>
+              <SelectItem value="jst">Japan Standard Time (JST)</SelectItem>
+              <SelectItem value="kst">Korea Standard Time (KST)</SelectItem>
+              <SelectItem value="ist_indonesia">
+                Indonesia Central Standard Time (WITA)
+              </SelectItem>
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>Australia & Pacific</SelectLabel>
+              <SelectItem value="awst">
+                Australian Western Standard Time (AWST)
+              </SelectItem>
+              <SelectItem value="acst">
+                Australian Central Standard Time (ACST)
+              </SelectItem>
+              <SelectItem value="aest">
+                Australian Eastern Standard Time (AEST)
+              </SelectItem>
+              <SelectItem value="nzst">New Zealand Standard Time (NZST)</SelectItem>
+              <SelectItem value="fjt">Fiji Time (FJT)</SelectItem>
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>South America</SelectLabel>
+              <SelectItem value="art">Argentina Time (ART)</SelectItem>
+              <SelectItem value="bot">Bolivia Time (BOT)</SelectItem>
+              <SelectItem value="brt">Brasilia Time (BRT)</SelectItem>
+              <SelectItem value="clt">Chile Standard Time (CLT)</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
 
-      <div className="right-part w-2/3 p-4">
+      {/* Social history copy */}
+      <div className="w-full order-5 md:order-5 md:w-300">
         <h1 className="text-center font-bold text-3xl text-blue-700">Social History</h1>
         <p className="text-center mt-2 text-gray-500">Lorem ipsum dolor sit amet consectetur.</p>
         <hr className="border-1 m-2" />
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="border rounded-lg overflow-hidden">
+            {/* Desktop: Table Layout */}
+            <div className="hidden md:block border rounded-lg overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
@@ -445,16 +551,51 @@ export default function MedicalHistory() {
                 </tbody>
               </table>
             </div>
-            <Button type="submit" className="mt-4">
+
+            {/* Mobile: List Layout */}
+            <div className="md:hidden space-y-4">
+              <ol className="list-decimal list-inside space-y-6">
+                {habitQuestions.map((question, index) => (
+                  <li key={index} className="pb-4 border-b last:border-b-0">
+                    <div className="flex flex-col">
+                      <span className="font-medium text-gray-900 mb-3">{question}</span>
+                      <div className="flex justify-between items-center">
+                        {["daily", "frequently", "never"].map((frequency) => (
+                          <div key={frequency} className="flex items-center">
+                            <span className="text-xs text-gray-500 mr-2 capitalize">{frequency}</span>
+                            <FormField
+                              control={form.control}
+                              name={`habits.${question.toLowerCase().replace(/\?/g, '').replace(/\s+/g, '_')}`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <RadioGroup
+                                      onValueChange={field.onChange}
+                                      value={field.value}
+                                    >
+                                      <RadioGroupItem value={frequency} />
+                                    </RadioGroup>
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <Button type="submit" className="mt-4 w-full md:w-auto bg-blue-700">
               Submit
             </Button>
           </form>
         </Form>
       </div>
-    
-      {/* = Last */ }
-    </div >
 
-
+      {/* ! last */}
+    </div>
   )
 }
