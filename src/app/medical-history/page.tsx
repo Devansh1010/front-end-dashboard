@@ -16,7 +16,7 @@ import {
   RadioGroupItem,
 } from "@/components/ui/radio-group"
 import { useForm } from "react-hook-form"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
@@ -29,10 +29,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import axios from "axios"
 
-export default function MedicalHistory() {
+export default function MedicalHistory(id: any) {
 
-  const [name, setName] = useState("Vivek");
+  const [patientRecord, setPatientRecord] = useState({});
+
+  useEffect(() => {
+    const getPatientData = async () => {
+        try {
+          const res = await axios.post(`/api/user-record`, id);
+          if(res.data.PatientNameGetData){
+            setPatientRecord(res.data.PatientNameGetData)
+          }
+        } catch (error) {
+          console.log("error getting patient Data", error)
+        }
+    }
+
+    getPatientData()
+  }, [id])
 
   const form = useForm()
   const onSubmit = () => {
