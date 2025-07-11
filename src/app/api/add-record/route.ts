@@ -17,20 +17,20 @@ export async function POST(req: Request) {
     surgicalHistory
   } = await req.json();
 
-  if (
-    !personalInfo?.name ||
-    !personalInfo?.age ||
-    !personalInfo?.gender ||
-    !personalInfo?.bloodGroup ||
-    !personalInfo?.weightKg ||
-    !personalInfo?.height?.feet ||
-    !personalInfo?.height?.inches 
-  ) {
-    return Response.json({
-      success: false,
-      message: "Some required personalInfo fields are missing",
-    }, { status: 400 });
-  }
+  // if (
+  //   !personalInfo?.name ||
+  //   !personalInfo?.age ||
+  //   !personalInfo?.gender ||
+  //   !personalInfo?.bloodGroup ||
+  //   !personalInfo?.weightKg ||
+  //   !personalInfo?.height?.feet ||
+  //   !personalInfo?.height?.inches 
+  // ) {
+  //   return Response.json({
+  //     success: false,
+  //     message: "Some required personalInfo fields are missing",
+  //   }, { status: 400 });
+  // }
 
 
   await dbConnect();

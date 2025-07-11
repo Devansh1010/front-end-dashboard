@@ -30,7 +30,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import axios from "axios"
-import { MedicalRecord } from "@/models/Patient"
+import { MedicalPrescription, MedicalRecord } from "@/models/Patient"
+import { Textarea } from "@/components/ui/textarea"
 
 
 export default function MedicalHistory(id: any) {
@@ -74,6 +75,15 @@ export default function MedicalHistory(id: any) {
     surgicalHistory: []
   });
 
+  const [precriptionRecord, setPrecriptionRecord] = useState<MedicalPrescription>({
+    date: '',
+    doctor: '',
+    hospital: '',
+    medications: [],
+    instructions: ''
+  });
+
+
 
   // TODO: display this data to appripriat form
   // TODO: create forms for different section of the full form part
@@ -113,6 +123,35 @@ export default function MedicalHistory(id: any) {
       }
     }
   });
+
+  // * Medical Preciption form
+  const [showForm, setShowForm] = useState(false);
+  const precriptionForm = useForm({
+    defaultValues: {
+      date: '',
+      doctor: '',
+      hospital: '',
+      madication: [],
+      instruction: ''
+    }
+  })
+
+  const onPrecriptionSubmit = async () => {
+    try {
+      console.log("sent")
+      const res = await axios.post('/api/add-record', precriptionForm)
+      if(!res){
+        // ! toast
+      }
+
+      setPrecriptionRecord(res.data)
+
+    } catch (error) {
+
+    }
+  }
+
+
   const habitQuestions = [
     "Do you exercise regularly?",
     "Do you consume alcohol?",
@@ -326,28 +365,94 @@ export default function MedicalHistory(id: any) {
       </div>
 
       {/* Medical Prescription */}
-      <div className="mt-5 w-full md:w-300 order-4">
-        <h1 className="mt-5 font-bold text-xl text-blue-600">View medical Precrisption</h1>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="flex flex-col md:flex-row gap-3 justify-center items-center">
-              <FormField
-                control={form.control}
-                name="preciption"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormControl>
-                      <Input placeholder="shadcn" {...field} className="w-full" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full md:w-auto  bg-blue-700">Medical Pricription</Button>
-            </div>
+      <div className="flex justify-between items-center w-full p-3 rounded-lg shadow mt-4">
+        <p className="font-semibold text-gray-700">Add new medical prescription</p>
+        <Button onClick={() => setShowForm(!showForm)} className="bg-blue-700">
+          {showForm ? "Close" : "View Medical Priciption"}
+        </Button>
+      </div>
+
+      {/* Expandable Form */}
+      {showForm && (
+        <Form {...precriptionForm}>
+          <form onSubmit={precriptionForm.handleSubmit(onPrecriptionSubmit)} className="space-y-4 mt-6 p-4 bg-white rounded-lg shadow">
+            <FormField
+              control={precriptionForm.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input type="date" placeholder={precriptionRecord.date} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={precriptionForm.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder={precriptionRecord.doctor} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={precriptionForm.control}
+              name="doctor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder={precriptionRecord.hospital} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Simple string list of medications for now */}
+            <FormField
+              control={precriptionForm.control}
+              name="madication"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Enter medications (comma-separated)"
+                      onChange={(e) => {
+                        const meds = e.target.value.split(',').map(m => m.trim());
+                        field.onChange(meds);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={precriptionForm.control}
+              name="instruction"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea placeholder="Instructions" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit" className="bg-blue-700">Save Prescription</Button>
           </form>
         </Form>
-      </div>
+      )}
+
 
       {/* Lifestyle and Allergies */}
       <div className="flex flex-col md:flex-row h-full w-full md:w-300 gap-6 m-5 order-5">
