@@ -32,6 +32,7 @@ import {
 import axios from "axios"
 import { MedicalPrescription, MedicalRecord } from "@/models/Patient"
 import { Textarea } from "@/components/ui/textarea"
+import { toast } from "sonner"
 
 
 export default function MedicalHistory(id: any) {
@@ -125,31 +126,114 @@ export default function MedicalHistory(id: any) {
   });
 
   // * Medical Preciption form
+
+  interface Medication {
+    name: string;
+    frequency: string;
+    duration: string;
+    purpose: string;
+  }
+
+  interface PrescriptionFormData {
+    date: string;
+    doctor: string;
+    hospital: string;
+    medications: Medication[];
+    instructions: string;
+  }
+
+  // Medical Pricription
+
+
   const [showForm, setShowForm] = useState(false);
-  const precriptionForm = useForm({
+  const precriptionForm = useForm<PrescriptionFormData>({
     defaultValues: {
       date: '',
       doctor: '',
       hospital: '',
-      madication: [],
-      instruction: ''
+      medications: [],
+      instructions: ''
     }
-  })
+  });
 
-  const onPrecriptionSubmit = async () => {
+
+  const onPrecriptionSubmit = async (data: PrescriptionFormData) => {
     try {
-      console.log("sent")
-      const res = await axios.post('/api/add-record', precriptionForm)
-      if(!res){
-        // ! toast
+      const res = await axios.post('/api/add-record', data);
+
+      if (res.status === 200) {
+        toast.success('Prescription added successfully!');
+        setPrecriptionRecord(res.data); // assuming it's the updated list or object
+        precriptionForm.reset();
+      } else {
+        toast.error('Something went wrong. Please try again.');
       }
 
-      setPrecriptionRecord(res.data)
-
-    } catch (error) {
-
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error?.response?.data?.message || 'Failed to submit prescription');
     }
-  }
+  };
+
+  // LifeStyle
+  const habitKeys = [
+    { label: "Smoking", key: "smoking" },
+    { label: "Alcohol", key: "alcohol" },
+    { label: "Drug Use", key: "drug_use" },
+    { label: "Exercise", key: "exercise" },
+    { label: "Caffeine", key: "caffeine" },
+    { label: "Vegetarian", key: "vegetarian" },
+  ] as const;
+
+  type HabitKey = typeof habitKeys[number]["key"];
+
+  type HabitsFormData = {
+    habits: {
+      smoking: 'yes' | 'no' | '';
+      alcohol: 'yes' | 'no' | '';
+      drug_use: 'yes' | 'no' | '';
+      exercise: 'yes' | 'no' | '';
+      caffeine: 'yes' | 'no' | '';
+      vegetarian: 'yes' | 'no' | '';
+    };
+  };
+
+  const defaultValues: HabitsFormData = {
+    habits: {
+      smoking: '',
+      alcohol: '',
+      drug_use: '',
+      exercise: '',
+      caffeine: '',
+      vegetarian: '',
+    },
+  };
+
+  const lifeStyle = useForm<HabitsFormData>({
+    defaultValues
+  });
+
+  const onLifeStyleSubmit = async (data: HabitsFormData) => {
+    console.log("Lifestyle Habits Submitted:", data);
+
+    try {
+      const res = await axios.post('/api/add-record/life-style', data);
+
+      if (res.status === 200) {
+        toast.success('Prescription added successfully!');
+        setPrecriptionRecord(res.data); // assuming it's the updated list or object
+        precriptionForm.reset();
+      } else {
+        toast.error('Something went wrong. Please try again.');
+      }
+
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error?.response?.data?.message || 'Failed to submit prescription');
+    }
+
+  };
+
 
 
   const habitQuestions = [
@@ -459,11 +543,11 @@ export default function MedicalHistory(id: any) {
         {/* Lifestyle Habits */}
         <div className="flex-1 bg-white rounded-lg shadow-md p-6 order-1 md:order-1">
           <h2 className="text-xl font-bold mb-4 text-blue-700">Lifestyle Habits</h2>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+
+          <Form {...lifeStyle}>
+            <form onSubmit={lifeStyle.handleSubmit(onLifeStyleSubmit)} className="space-y-6">
               <div className="border rounded-lg overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
-                  {/* Table content remains the same */}
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Type</th>
@@ -471,24 +555,21 @@ export default function MedicalHistory(id: any) {
                       <th className="px-4 py-3 text-center text-sm font-medium text-gray-500">No</th>
                     </tr>
                   </thead>
+
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {[
-                      "Smoking",
-                      "Alcohol",
-                      "Drug Use",
-                      "Exercise",
-                      "Caffeine",
-                      "Vegetarian"
-                    ].map((habit) => {
-                      const fieldName = `habits.${habit.toLowerCase().replace(' ', '_')}`;
+                    {habitKeys.map(({ label, key }) => {
+                      const fieldName = `habits.${key}` as const;
+
                       return (
-                        <tr key={habit}>
+                        <tr key={key}>
                           <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {habit}
+                            {label}
                           </td>
+
+                          {/* YES */}
                           <td className="px-4 py-3 whitespace-nowrap text-center">
                             <FormField
-                              control={form.control}
+                              control={lifeStyle.control}
                               name={fieldName}
                               render={({ field }) => (
                                 <RadioGroup
@@ -496,14 +577,16 @@ export default function MedicalHistory(id: any) {
                                   onValueChange={field.onChange}
                                   className="flex justify-center"
                                 >
-                                  <RadioGroupItem value="yes" />
+                                  <RadioGroupItem value="yes" id={`${key}_yes`} />
                                 </RadioGroup>
                               )}
                             />
                           </td>
+
+                          {/* NO */}
                           <td className="px-4 py-3 whitespace-nowrap text-center">
                             <FormField
-                              control={form.control}
+                              control={lifeStyle.control}
                               name={fieldName}
                               render={({ field }) => (
                                 <RadioGroup
@@ -511,7 +594,7 @@ export default function MedicalHistory(id: any) {
                                   onValueChange={field.onChange}
                                   className="flex justify-center"
                                 >
-                                  <RadioGroupItem value="no" />
+                                  <RadioGroupItem value="no" id={`${key}_no`} />
                                 </RadioGroup>
                               )}
                             />
@@ -522,9 +605,16 @@ export default function MedicalHistory(id: any) {
                   </tbody>
                 </table>
               </div>
+
+              <div className="flex justify-end">
+                <button type="submit" className="bg-blue-700 text-white px-4 py-2 rounded-lg">
+                  Save Lifestyle Habits
+                </button>
+              </div>
             </form>
           </Form>
         </div>
+
 
         {/* Allergies */}
         <div className="flex-1 bg-white rounded-lg shadow-md p-6 order-2 md:order-2">
