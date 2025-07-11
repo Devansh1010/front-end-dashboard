@@ -30,23 +30,56 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import axios from "axios"
+import { MedicalRecord } from "@/models/Patient"
+
 
 export default function MedicalHistory(id: any) {
 
-  const [patientRecord, setPatientRecord] = useState({});
+  const [patientRecord, setPatientRecord] = useState<MedicalRecord>({
+    personalInfo: {
+      name = "",
+      age = 0,
+      gender = '',
+      bloodGroup = '',
+      weightKg = 0,
+      height = {
+        feet = 0,
+        inches = 0
+      },
+      BMI = 0
+    },
+    socialHistory: {
+      smoking: '',
+      alcoholConsumption: '',
+      drugUse: '',
+      exerciseFrequency: '',
+      dietType: '',
+    },
+    medicalPrescription: {
+      date = Date.now , // ISO format: YYYY-MM-DD
+      doctor = '', 
+      hospital = '', 
+      medications = '',
+      instructions = '', 
+    }
+    knownAllergies: KnownAllergies;
+    medicalHistory: MedicalHistoryEntry[];
+    surgicalHistory: SurgicalHistoryEntry[];
+  });
 
   // TODO: display this data to appripriat form
   // TODO: create forms for different section of the full form part
   useEffect(() => {
     const getPatientData = async () => {
-        try {
-          const res = await axios.post(`/api/user-record`, id);
-          if(res.data.PatientNameGetData){
-            setPatientRecord(res.data.PatientNameGetData)
-          }
-        } catch (error) {
-          console.log("error getting patient Data", error)
+      try {
+        const res = await axios.post(`/api/user-record`, id);
+        if (res.data.PatientNameGetData) {
+          setPatientRecord(res.data.PatientNameGetData)
+          console.log(res.data.PatientNameGetData)
         }
+      } catch (error) {
+        console.log("error getting patient Data", error)
+      }
     }
 
     getPatientData()
@@ -90,7 +123,7 @@ export default function MedicalHistory(id: any) {
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <h1 className="text-center font-bold text-blue-700 text-2xl"> {name}</h1>
+            <h1 className="text-center font-bold text-blue-700 text-2xl">{patientRecord.personalInfo?.name}</h1>
           </div>
           <div className="form-container">
             <Form {...form}>
@@ -103,7 +136,7 @@ export default function MedicalHistory(id: any) {
                     <FormItem className="flex gap-2">
                       <FormLabel>Blood Group:</FormLabel>
                       <FormControl>
-                        <Input placeholder={name} {...field} className="w-20" />
+                        <Input placeholder={""} {...field} className="w-20" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -116,7 +149,7 @@ export default function MedicalHistory(id: any) {
                     <FormItem className="flex gap-2">
                       <FormLabel>Weight:</FormLabel>
                       <FormControl>
-                        <Input placeholder={name} {...field} className="w-20" />
+                        <Input placeholder={"name"} {...field} className="w-20" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -169,7 +202,7 @@ export default function MedicalHistory(id: any) {
                     <FormItem className="flex gap-2">
                       <FormLabel>BMI:</FormLabel>
                       <FormControl>
-                        <Input placeholder={name} {...field} className="w-20" />
+                        <Input placeholder={"name"} {...field} className="w-20" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

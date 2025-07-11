@@ -18,7 +18,7 @@ import Navbar from "../Navbar/page";
 
 type Details = {
   name: string
-   id: string
+  id: string
 }
 
 
@@ -31,10 +31,12 @@ export default function MedicalDashboard() {
   const GetData = async () => {
     try {
       const res = await axios.get("/api/get-records-details");
-      console.log(res.data.names[0])
       setPatientNames(res.data.names);
       setPatientIds(res.data.ids);
-      // setSelectedMember(res.data.patients[0]);
+
+      if (res.data.names?.length) {
+        setSelectedMember(res.data.names[0]);
+      }
     } catch (error) {
       alert("❌ Server error");
       console.error("API error:", error);
@@ -50,63 +52,75 @@ export default function MedicalDashboard() {
       <Navbar />
 
       <div className="flex flex-col lg:flex-row flex-1 w-full">
-        {/* Sidebar */}
         <div className="w-full lg:w-64 bg-white border-r p-4 drop-shadow-2xl">
           <div className="space-y-4">
-            {/* User dropdown for small screens */}
-            <div className="w-full px-4 py-4 lg:hidden">
-              <select
-                id="userSelect"
-                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                value={selectedMember?.name}
-                onChange={(e) => {
-                  const selected = patientNames.find(
-                    (m) => m.name === e.target.value
-                  );
-                  if (selected) setSelectedMember(selected);
-                }}
-              >
-                {patientNames.map((member, index) => (
-                  <option
-                    key={index}
-                    value={member.name}
+            {/* Mobile Dropdown (shown only on mobile) */}
+            <div className="lg:hidden">
+              <div className="relative">
+                <button
+                  className="w-full flex items-center justify-between p-3 border rounded-lg bg-white hover:bg-gray-50"
+                  onClick={() => document.getElementById('patient-dropdown')?.classList.toggle('hidden')}
+                >
+                  <span className="text-black">
+                    {selectedMember?.name || "Select Patient"}
+                  </span>
+                  <svg
+                    className="w-4 h-4 ml-2 text-gray-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    {member.name}
-                  </option>
-                ))}
-              </select>
-              <Button className="w-full bg-yellow-300 hover:bg-yellow-400 text-black mt-6 ...">
-                <Link href="/add-data-form">
-                  <div className="flex flex-col items-center cursor-pointer p-2 rounded-lg hover:bg-gray-50">
-                    <span className="text-xs text-gray-600">Add</span>
-                  </div>
-                </Link>
-              </Button>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                <div
+                  id="patient-dropdown"
+                  className="hidden absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto"
+                >
+                  {patientNames.map((member: any, index) => (
+                    <div
+                      key={index}
+                      className={`px-4 py-3 cursor-pointer hover:bg-gray-100 ${selectedMember?.name === member ? "bg-blue-50" : ""
+                        }`}
+                      onClick={() => {
+                        setSelectedMember(member);
+                        document.getElementById('patient-dropdown')?.classList.add('hidden');
+                      }}
+                    >
+                      <span className="text-black">{member}</span>
+                    </div>
+                  ))}
+                  <Link href="/add-data-form">
+                    <div className="px-4 py-3 cursor-pointer hover:bg-gray-100 border-t border-gray-200 flex items-center">
+                      <PlusIcon className="h-4 w-4 text-gray-400 mr-2" />
+                      <span className="text-gray-600">Add Patient</span>
+                    </div>
+                  </Link>
+                </div>
+              </div>
             </div>
 
-            {/* Sidebar for large screens */}
+            {/* Desktop Sidebar (shown only on desktop) */}
             <div className="hidden lg:block">
               <div className="text-center">
                 <p className="text-sm font-medium text-gray-600 mb-4">
                   {selectedMember?.name}
                 </p>
               </div>
-              {patientNames.map((member, index) => (
+              {patientNames.map((member: any, index) => (
                 <div
                   key={index}
-                  className={`flex flex-col items-center cursor-pointer p-2 rounded-lg transition-colors  
-        ${
-          selectedMember?.name === member.name
-            ? "bg-blue-100"
-            : "hover:bg-gray-50"
-        }`}
+                  className={`flex flex-col items-center cursor-pointer p-2 m-2 rounded-lg transition-colors ${selectedMember?.name === member ? "bg-blue-100" : "hover:bg-gray-50"
+                    }`}
                   onClick={() => setSelectedMember(member)}
                 >
-                  <div className="h-10 w-10 bg-gray-300 rounded-full mb-1 flex items-center justify-center text-white font-bold">
-                    {member.name}
+                  <div className="h-10">
+                    <h2 className="text-black">{member}</h2>
                   </div>
                   <span className="text-xs text-gray-600 underline underline-offset-2">
-                    {member.name}
+                    {member}
                   </span>
                 </div>
               ))}
