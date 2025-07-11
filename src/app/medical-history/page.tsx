@@ -37,16 +37,16 @@ export default function MedicalHistory(id: any) {
 
   const [patientRecord, setPatientRecord] = useState<MedicalRecord>({
     personalInfo: {
-      name = "",
-      age = 0,
-      gender = '',
-      bloodGroup = '',
-      weightKg = 0,
-      height = {
-        feet = 0,
-        inches = 0
+      name: "",
+      age: "",
+      gender: '',
+      bloodGroup: '',
+      weightKg: "",
+      height: {
+        feet: "",
+        inches: ""
       },
-      BMI = 0
+      BMI: ""
     },
     socialHistory: {
       smoking: '',
@@ -55,17 +55,25 @@ export default function MedicalHistory(id: any) {
       exerciseFrequency: '',
       dietType: '',
     },
-    medicalPrescription: {
-      date = Date.now , // ISO format: YYYY-MM-DD
-      doctor = '', 
-      hospital = '', 
-      medications = '',
-      instructions = '', 
-    }
-    knownAllergies: KnownAllergies;
-    medicalHistory: MedicalHistoryEntry[];
-    surgicalHistory: SurgicalHistoryEntry[];
+    medicalPrescription: [
+      {
+        date: new Date().toISOString().split('T')[0],
+        doctor: '',
+        hospital: '',
+        medications: [],
+        instructions: '',
+      }
+    ],
+
+    knownAllergies: {
+      drugAllergies: [],
+      foodAllergies: [],
+      environmentalAllergies: []
+    },
+    medicalHistory: [],
+    surgicalHistory: []
   });
+
 
   // TODO: display this data to appripriat form
   // TODO: create forms for different section of the full form part
@@ -136,7 +144,7 @@ export default function MedicalHistory(id: any) {
                     <FormItem className="flex gap-2">
                       <FormLabel>Blood Group:</FormLabel>
                       <FormControl>
-                        <Input placeholder={""} {...field} className="w-20" />
+                        <Input placeholder={patientRecord.personalInfo.bloodGroup} {...field} className="w-20" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -149,7 +157,7 @@ export default function MedicalHistory(id: any) {
                     <FormItem className="flex gap-2">
                       <FormLabel>Weight:</FormLabel>
                       <FormControl>
-                        <Input placeholder={"name"} {...field} className="w-20" />
+                        <Input placeholder={patientRecord.personalInfo.weightKg} {...field} className="w-20" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -165,7 +173,7 @@ export default function MedicalHistory(id: any) {
                         <div className="flex items-center gap-2">
                           <Input
                             type="number"
-                            placeholder="Feet"
+                            placeholder={patientRecord.personalInfo.height.feet}
                             className="w-20"
                             value={field.value?.feet || ''}
                             onChange={(e) => {
@@ -178,7 +186,7 @@ export default function MedicalHistory(id: any) {
                           <span>ft</span>
                           <Input
                             type="number"
-                            placeholder="Inches"
+                            placeholder={patientRecord.personalInfo.height.inches}
                             className="w-20"
                             value={field.value?.inches || ''}
                             onChange={(e) => {
@@ -202,7 +210,7 @@ export default function MedicalHistory(id: any) {
                     <FormItem className="flex gap-2">
                       <FormLabel>BMI:</FormLabel>
                       <FormControl>
-                        <Input placeholder={"name"} {...field} className="w-20" />
+                        <Input placeholder={patientRecord.personalInfo.BMI} {...field} className="w-20" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

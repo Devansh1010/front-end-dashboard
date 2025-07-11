@@ -11,15 +11,15 @@
 
     export interface PersonalInfo {
         name: string;
-        age: number;
+        age: string;
         gender: string;
         bloodGroup: string;
-        weightKg: number;
+        weightKg: string;
         height: {
-            feet: number;
-            inches: number;
+            feet: string;
+            inches: string;
         };
-        BMI: number;
+        BMI: string;
     }
 
     export interface SocialHistory {
