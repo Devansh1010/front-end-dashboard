@@ -118,6 +118,53 @@ export const medicalRecord = [{
             "notes": "Vision improved, follow-up completed."
         }
     ]
+},
+
+{
+    "patientId": "P34567",
+    "personalInfo": {
+        "name": "Aman Verma",
+        "age": 42,
+        "gender": "Male",
+        "bloodGroup": "AB-",
+        "weightKg": 85,
+        "height": { "feet": 5, "inches": 10 },
+        "BMI": 27.3
+    },
+    "socialHistory": {
+        "smoking": "Yes",
+        "alcoholConsumption": "Frequently",
+        "drugUse": "No",
+        "exerciseFrequency": "Rarely",
+        "dietType": "Non-Vegetarian"
+    },
+    "classicalHealthQuestions": [
+        { "question": "Do you have any chronic illnesses?", "answer": "Yes" },
+        { "question": "Do you have a history of surgery?", "answer": "No" },
+        { "question": "Are you currently on any medication?", "answer": "Yes" },
+        { "question": "Do you have any known allergies?", "answer": "No" },
+        { "question": "Do you experience shortness of breath during physical activity?", "answer": "Yes" }
+    ],
+    "medicalPrescription": [
+        {
+            "date": "2025-07-10",
+            "doctor": "Dr. Rajan Patel",
+            "hospital": "Zydus Hospital",
+            "medications": [
+                { "name": "Amlodipine", "frequency": "Once daily", "duration": "90 days", "purpose": "High blood pressure" }
+            ],
+            "instructions": "Avoid high salt intake. Monitor blood pressure daily."
+        }
+    ],
+    "knownAllergies": {
+        "drugAllergies": [],
+        "foodAllergies": [],
+        "environmentalAllergies": []
+    },
+    "medicalHistory": [
+        { "condition": "Hypertension", "diagnosedOn": "2019-03-01", "status": "Ongoing", "notes": "Needs lifestyle changes" }
+    ],
+    "surgicalHistory": []
 }
 ]
 

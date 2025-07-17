@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import Link from "next/link"
 
 interface FormData {
   socialHistory: {
@@ -59,9 +60,11 @@ export default function MedicalHistoryPage() {
       <div className="bg-blue-600 text-white p-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="text-white hover:bg-blue-700">
-              ← Back
-            </Button>
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm" className="text-white hover:bg-blue-700">
+                ← Back
+              </Button>
+            </Link>
             <h1 className="text-lg font-medium">hfiles</h1>
           </div>
           <div className="flex items-center gap-3">
