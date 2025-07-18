@@ -27,9 +27,11 @@ const medicalServices = [
     { id: "medicine-vaccine", name: "MEDICINE & VACCINE", icon: HeartIcon, position: { bottom: "15%", right: "15%" }, color: "bg-indigo-100 text-indigo-600" },
 ]
 
+
 export default function MedicalDashboard() {
     const [selectedMember, setSelectedMember] = useState(medicalRecord[0].personalInfo.name)
 
+    console.log("Selected Member:", selectedMember)
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col min-w-full">
             {/* Header */}
@@ -110,7 +112,7 @@ export default function MedicalDashboard() {
                     {/* Desktop View */}
                     <div className="hidden md:flex justify-center items-center h-96 relative">
                         {/* Center Icon */}
-                        <div className=" min-h-screen w-full bg-fixed bg-center bg-[url('/images/cartoon.avif')]">
+                        <div className="min-h-screen w-full bg-fixed bg-center bg-[url('/images/cartoon.avif')]">
                             {/* Circular Buttons */}
                             {medicalServices.map((service) => (
                                 <Button
@@ -152,7 +154,9 @@ export default function MedicalDashboard() {
                 {/* Right Sidebar */}
                 <div className="w-full lg:w-1/5 bg-white border-l p-4 flex-shrink-0 flex flex-col justify-between drop-shadow-2xl mt-4 lg:mt-0">
                     <div className="space-y-4">
-                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Add Reports</Button>
+                        <Link href={`/medical-history?${selectedMember}`} className="w-full">
+                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white mb-4">Show Reports</Button>
+                        </Link>
                         <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black">Create Folder</Button>
                         <Button className="w-full bg-yellow-300 hover:bg-yellow-400 text-black">All Reports</Button>
 
